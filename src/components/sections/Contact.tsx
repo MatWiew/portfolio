@@ -4,9 +4,9 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { ContactForm } from "@/components/sections/ContactForm";
 
 const channels = [
-  { label: "EMAIL", value: "m@wiewiora.dev" },
-  { label: "GITHUB", value: "github.com/mwiewiora" },
-  { label: "LINKEDIN", value: "in/mwiewiora" },
+  { label: "EMAIL", value: "kontakt@mateuszwiewiora.pl" },
+  { label: "GITHUB", value: "https://github.com/MatthewCoderAdrilla" },
+  { label: "LINKEDIN", value: "https://linkedin.com/in/mateusz-wiewiora/" },
 ];
 
 export function Contact() {

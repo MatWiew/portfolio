@@ -31,18 +31,18 @@ export const capabilityGroups: CapabilityGroup[] = [
 ];
 
 export const operatorMetrics: OperatorMetric[] = [
-  { value: "6+", label: "YRS ACTIVE" },
-  { value: "40+", label: "SYSTEMS SHIPPED" },
-  { value: "2M+", label: "REQUESTS HANDLED" },
-  { value: "99.9%", label: "UPTIME MAINTAINED" },
+  { value: "3+", label: "YRS ACTIVE" },
+  { value: "100%", label: "EYE-CATCHING DESIGN" },
+  { value: "0", label: "THIRD-PARTY BOILERPLATES" },
+  { value: "100%", label: "UPTIME MAINTAINED" },
 ];
 
 export const operatorAbout = {
   designation:
-    "Full-Stack Engineer z głębokimi korzeniami w MERN stack oraz ekosystemie WordPress / WooCommerce.",
+    "Full-Stack Engineer z doświadczeniem w MERN stack oraz ekosystemie WordPress / WooCommerce.",
   origin:
-    "Polska → Remote / Global. Wdrożone systemy produkcyjne obsługujące tysiące dziennych zapytań.",
+    "Polska → Remote / Global. Dostępny do współpracy nad projektami e-commerce, SaaS, oraz custom developmentem.",
   philosophy:
-    "Kod jako architektura. Każda linia ma znaczenie. Obsesja na punkcie wydajności, DX i wdrożeń bez przestojów.",
+    "Skupiam się na projektowaniu stron, które budzą emocje i zostają w głowie na długo.",
   tags: ["MERN Stack", "WordPress", "WooCommerce", "Performance"],
 };

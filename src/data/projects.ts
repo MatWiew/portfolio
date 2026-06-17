@@ -4,66 +4,69 @@ export const projects: Project[] = [
   {
     id: "P.01",
     codename: "KLUB C4",
-    category: "Booking · Real-Time",
+    category: "Web Development · Landing Page",
     status: "LIVE",
     description:
-      "System rezerwacji w czasie rzeczywistym dla klubu sportowego. Optymalizacja zapytań do bazy danych o 70%, synchronizacja stanu przez WebSockets.",
-    stack: ["Node.js", "WebSockets", "PostgreSQL", "React"],
+      "Nowoczesna, dynamiczna strona internetowa zaprojektowana pod kątem młodszej grupy odbiorców. Skupiona na mocnym efekcie wizualnym, płynnych przejściach i pełnej responsywności.",
+    stack: ["HTML5", "CSS3 / SCSS", "JavaScript", "Responsive Design"],
     challenge:
-      "Klub miał problem z podwójnymi rezerwacjami i wolnym, blokującym UI przy dużym obciążeniu w godzinach szczytu — zapytania do bazy trwały nawet 1,2s.",
+      "Stworzenie projektu, który przełamie schemat nudnych stron i natychmiast przyciągnie uwagę młodego klienta, zachowując przy tym lekkość działania.",
     solution:
-      "Przeprojektowano schemat bazy i dodano indeksy kompozytowe, redukując czas zapytań o 70%. Wdrożono warstwę WebSocket synchronizującą dostępność slotów w czasie rzeczywistym między wszystkimi klientami, eliminując konflikty rezerwacji.",
+      "Wdrożono nieszablonowy, dynamiczny layout zoptymalizowany pod kątem urządzeń mobilnych, z intuicyjną nawigacją i strukturą ułatwiającą szybki kontakt.",
     metrics: [
-      { label: "Redukcja czasu zapytań", value: "70%" },
-      { label: "Konflikty rezerwacji", value: "0" },
+      { label: "Odbiorcy", value: "MŁODZI" },
+      { label: "Dostosowanie", value: "MOBILE" },
     ],
   },
   {
     id: "P.02",
-    codename: "NATURALNY KOSZYK",
-    category: "E-commerce · Headless",
+    codename: "NATURALNY KOSZYK B2B",
+    category: "E-commerce · Business Architecture",
     status: "LIVE",
     description:
-      "Headless WooCommerce z frontendem na Next.js. LCP poniżej 1.2s na urządzeniach mobilnych, pełna optymalizacja SEO i Core Web Vitals.",
-    stack: ["Next.js", "WooCommerce", "GraphQL", "Tailwind"],
+      "Dedykowana podstrona biznesowa zaprojektowana i wdrożona na potrzeby obsługi partnerów hurtowych i współpracy handlowej (B2B).",
+    stack: ["WordPress", "WooCommerce", "B2B Logic", "UI Optimization"],
     challenge:
-      "Standardowy motyw WooCommerce ładował się ponad 4s na mobile, co przekładało się na wysoki współczynnik odrzuceń i słabe pozycje w wyszukiwarce.",
+      "Stworzenie przejrzystego, profesjonalnego punktu styku dla klientów biznesowych wewnątrz istniejącego ekosystemu sklepu, oddzielonego od standardowej oferty detalicznej.",
     solution:
-      "Oddzielono frontend od WordPressa (architektura headless), komunikacja przez WPGraphQL. Statyczne generowanie stron produktowych (ISR), agresywne lazy-loading obrazów i cache na poziomie CDN sprowadziły LCP do poniżej 1.2s.",
+      "Zaprojektowano i zakodowano dedykowaną architekturę podstrony B2B z logicznym układem korzyści, formularzem weryfikacyjnym i ścieżką rejestracji dla hurtowników.",
     metrics: [
-      { label: "LCP (mobile)", value: "<1.2s" },
-      { label: "Lighthouse Performance", value: "98" },
+      { label: "Segment", value: "B2B" },
+      { label: "Struktura", value: "DEDYKOWANA" },
     ],
   },
   {
     id: "P.03",
-    codename: "CIPHER.IO",
-    category: "Security · API",
+    codename: "MAJK (KREATOR POPUP)",
+    category: "Custom Dev · E-commerce",
     status: "LIVE",
     description:
-      "Infrastruktura komunikacji end-to-end encrypted dla enterprise. Zgodność z FIPS 140-2. Obsługa 800k dziennych aktywnych użytkowników.",
-    stack: ["Node.js", "WebSockets", "PostgreSQL", "K8s"],
+      "Wdrożenie dedykowanego modułu popupu do personalizacji zamówień (kreator dedykacji) oraz zaawansowane poprawki wizualne interfejsu sklepu.",
+    stack: ["JavaScript", "E-commerce UX", "Custom Scripting", "CSS"],
     challenge:
-      "Klient wymagał zgodności z FIPS 140-2 oraz skalowalności do setek tysięcy równoczesnych połączeń bez degradacji opóźnień.",
+      "Sklep potrzebował intuicyjnego mechanizmu dodawania własnych dedykacji do produktów, bez obciążania procesu zakupowego i psucia layoutu.",
     solution:
-      "Wdrożono szyfrowanie end-to-end zgodne z wymaganym standardem kryptograficznym oraz architekturę mikroserwisową na Kubernetes z horyzontalnym autoscalingiem, obsługującą 800k DAU przy stabilnym opóźnieniu.",
+      "Napisano customowy skrypt obsługujący popup dedykacji zintegrowany z koszykiem. Przeprowadzono serię poprawek wizualnych, które poprawiły czytelność i wygląd kart produktowych.",
     metrics: [
-      { label: "Dzienni aktywni użytkownicy", value: "800k" },
-      { label: "Zgodność", value: "FIPS 140-2" },
+      { label: "Funkcja", value: "CUSTOM POPUP" },
+      { label: "Interfejs", value: "POPRAWIONY" },
     ],
   },
   {
     id: "P.04",
-    codename: "DARKFRAME",
-    category: "ML · Vision",
-    status: "BETA",
+    codename: "MR PHARMACEUTICALS",
+    category: "Optimization · UI Bugfixing",
+    status: "LIVE",
     description:
-      "Pipeline computer vision do wykrywania anomalii w środowiskach produkcyjnych. Modele PyTorch serwowane przez custom runtime ONNX.",
-    stack: ["Python", "PyTorch", "ONNX", "FastAPI"],
+      "Prace optymalizacyjne i naprawcze nad warstwą wizualną międzynarodowego serwisu e-commerce w celu eliminacji błędów renderowania.",
+    stack: ["Frontend Dev", "UI Debugging", "Cross-Browser CSS", "Optimization"],
     challenge:
-      "Modele PyTorch były zbyt wolne do inferencji w czasie rzeczywistym na sprzęcie produkcyjnym, a standardowe API serwujące nie skalowało się pod obciążeniem.",
+      "Serwis posiadał błędy w wyświetlaniu elementów layoutu na różnych rozdzielczościach, co negatywnie wpływało na profesjonalny odbiór strony.",
     solution:
-      "Modele skonwertowano do formatu ONNX i serwowano przez custom runtime z optymalizacją grafu obliczeniowego, co kilkukrotnie zredukowało czas inferencji. FastAPI z asynchronicznym przetwarzaniem batchowym zapewniło stabilną przepustowość pod obciążeniem.",
-    metrics: [{ label: "Status", value: "BETA" }],
+      "Zlokalizowano i naprawiono konflikty w plikach stylów, zoptymalizowano wyświetlanie kluczowych sekcji UI i zapewniono pełną spójność wizualną na ekranach desktopowych i mobile.",
+    metrics: [
+      { label: "Obszar", value: "WIZUALNY" },
+      { label: "Błędy UI", value: "RESOLVED" },
+    ],
   },
 ];
