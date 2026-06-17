@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     const apiKey = process.env.RESEND_API_KEY;
     const toAddress = process.env.CONTACT_RECEIVER_EMAIL;
-    const fromAddress = process.env.CONTACT_SENDER_EMAIL ?? "onboarding@resend.dev";
+    const fromAddress = process.env.CONTACT_SENDER_EMAIL ?? "kontakt@mateuszwiewiora.pl";
 
     if (!apiKey || !toAddress) {
       console.error(
