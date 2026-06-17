@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core palette — Cyber-Noir Terminal (Indigo variant) */
+  --color-bg-void: #000000;
+  --color-bg-panel: #07070b;
+  --color-bg-panel-header: #0d0d16;
+  --color-border-dim: #211f33;
+  --color-border-bright: #3c3489;
+
+  --color-accent-green: #7f77dd;
+  --color-accent-green-dim: #4a4399;
+  --color-accent-cyan: #9b95e8;
+  --color-accent-yellow: #b8b3ed;
+  --color-accent-red: #ff5f5f;
+
+  --color-text-primary: #d6d3f0;
+  --color-text-dim: #5e5a85;
+  --color-text-faint: #322f54;
+
+  /* Fonts */
+  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+  --font-sans: var(--font-sans), "Inter", sans-serif;
+
+  /* Shadows / glow */
+  --shadow-glow-green: 0 0 8px rgba(127, 119, 221, 0.55), 0 0 24px rgba(127, 119, 221, 0.25);
+  --shadow-glow-cyan: 0 0 8px rgba(155, 149, 232, 0.55), 0 0 24px rgba(155, 149, 232, 0.25);
+  --shadow-panel: 0 0 0 1px rgba(60, 52, 137, 0.4), 0 12px 40px rgba(0, 0, 0, 0.6);
+
+  --animate-blink: blink 1s step-end infinite;
+  --animate-scan: scan 8s linear infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg-void);
+  background-image:
+    linear-gradient(rgba(127, 119, 221, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127, 119, 221, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Scanline overlay */
+.scanline-overlay::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(127, 119, 221, 0.035) 50%,
+    transparent 100%
+  );
+  background-size: 100% 4px;
+  mix-blend-mode: overlay;
+}
+
+/* Terminal window panel */
+.terminal-panel {
+  background-color: var(--color-bg-panel);
+  border: 1px solid var(--color-border-dim);
+  box-shadow: var(--shadow-panel);
+}
+
+.terminal-header {
+  background-color: var(--color-bg-panel-header);
+  border-bottom: 1px solid var(--color-border-dim);
+}
+
+/* Glow text utilities */
+.text-glow-green {
+  color: var(--color-accent-green);
+  text-shadow: 0 0 6px rgba(127, 119, 221, 0.6), 0 0 18px rgba(127, 119, 221, 0.3);
+}
+
+.text-glow-cyan {
+  color: var(--color-accent-cyan);
+  text-shadow: 0 0 6px rgba(155, 149, 232, 0.6), 0 0 18px rgba(155, 149, 232, 0.3);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-bright);
+}
+
+/* Glitch text effect — RGB-split layers fire periodically + on hover */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-glitch-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.glitch-text::before {
+  color: var(--color-accent-cyan);
+  -webkit-text-fill-color: var(--color-accent-cyan);
+  z-index: -1;
+  animation: glitch-before 6s infinite;
+}
+
+.glitch-text::after {
+  color: var(--color-accent-red);
+  -webkit-text-fill-color: var(--color-accent-red);
+  z-index: -2;
+  animation: glitch-after 6s infinite;
+}
+
+.glitch-text:hover::before,
+.glitch-text:hover::after {
+  animation-duration: 0.4s;
+}
+
+@keyframes glitch-before {
+  0%, 92%, 100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  93% {
+    opacity: 0.7;
+    transform: translate(-3px, 1px);
+    clip-path: inset(10% 0 60% 0);
+  }
+  94% {
+    opacity: 0.7;
+    transform: translate(2px, -1px);
+    clip-path: inset(60% 0 5% 0);
+  }
+  95% {
+    opacity: 0.5;
+    transform: translate(-2px, 0);
+    clip-path: inset(30% 0 40% 0);
+  }
+  96% {
+    opacity: 0;
+  }
+}
+
+@keyframes glitch-after {
+  0%, 90%, 100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  91% {
+    opacity: 0.7;
+    transform: translate(3px, -1px);
+    clip-path: inset(20% 0 50% 0);
+  }
+  92% {
+    opacity: 0.7;
+    transform: translate(-2px, 1px);
+    clip-path: inset(50% 0 15% 0);
+  }
+  93% {
+    opacity: 0.5;
+    transform: translate(2px, 0);
+    clip-path: inset(5% 0 70% 0);
+  }
+  94% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch-text::before,
+  .glitch-text::after {
+    animation: none;
+    display: none;
+  }
+}
