@@ -59,8 +59,8 @@ export function Templates() {
             </h2>
           </div>
           <p className="max-w-xs text-muted-foreground text-sm leading-relaxed">
-            Gotowe do produkcji startery full-stack. Uruchom podgląd na żywo i testuj
-            responsywność na różnych urządzeniach.
+            Gotowe do produkcji startery full-stack. Uruchom podgląd na żywo i
+            testuj responsywność na różnych urządzeniach.
           </p>
         </motion.div>
 
@@ -86,7 +86,9 @@ export function Templates() {
                     className="w-2 h-2 rounded-full flex-shrink-0"
                     style={{ background: activeTpl === i ? t.accent : "#333" }}
                   />
-                  <span className="text-sm font-semibold text-foreground">{t.name}</span>
+                  <span className="text-sm font-semibold text-foreground">
+                    {t.name}
+                  </span>
                 </button>
               ))}
             </div>
@@ -94,7 +96,12 @@ export function Templates() {
             {/* Przełącznik urządzeń */}
             <div className="flex items-center gap-2 mb-5">
               {(["desktop", "tablet", "mobile"] as Device[]).map((d) => {
-                const Icon = d === "desktop" ? Monitor : d === "tablet" ? Tablet : Smartphone;
+                const Icon =
+                  d === "desktop"
+                    ? Monitor
+                    : d === "tablet"
+                      ? Tablet
+                      : Smartphone;
                 return (
                   <button
                     key={d}
@@ -143,7 +150,10 @@ export function Templates() {
                         <div className="h-3 bg-white/20 rounded w-1/2" />
                         <div className="grid grid-cols-3 gap-3 mt-4">
                           {[1, 2, 3].map((n) => (
-                            <div key={n} className="h-24 bg-white/10 rounded-xl" />
+                            <div
+                              key={n}
+                              className="h-24 bg-white/10 rounded-xl"
+                            />
                           ))}
                         </div>
                         <div className="h-40 bg-white/5 rounded-xl" />
@@ -151,13 +161,17 @@ export function Templates() {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => setLoaded((p) => ({ ...p, [activeTpl]: true }))}
+                        onClick={() =>
+                          setLoaded((p) => ({ ...p, [activeTpl]: true }))
+                        }
                         disabled={!active?.hasPreview}
                         style={{ fontFamily: "var(--font-mono)" }}
                         className="flex items-center gap-2 bg-primary text-black text-xs font-bold uppercase tracking-widest px-7 py-3.5 rounded-full hover:bg-primary/90 transition-colors shadow-[0_0_30px_rgba(0,212,255,0.3)] disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        {active?.hasPreview ? "Uruchom podgląd na żywo" : "Brak podglądu"}
+                        {active?.hasPreview
+                          ? "Uruchom podgląd na żywo"
+                          : "Brak podglądu"}
                       </motion.button>
                       <p className="text-muted-foreground text-xs">
                         Podgląd ładuje się w izolowanym iframe
@@ -165,6 +179,7 @@ export function Templates() {
                     </div>
                   ) : (
                     <iframe
+                      key={device}
                       src={`/api/templates/${active?.slug}/preview`}
                       className="w-full border-0"
                       style={{ height: 460 }}
@@ -186,7 +201,9 @@ export function Templates() {
                     className="mt-5 flex flex-col md:flex-row md:items-start justify-between gap-4"
                   >
                     <div>
-                      <h3 className="font-bold text-foreground text-lg mb-1">{active.name}</h3>
+                      <h3 className="font-bold text-foreground text-lg mb-1">
+                        {active.name}
+                      </h3>
                       <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
                         {active.desc}
                       </p>
