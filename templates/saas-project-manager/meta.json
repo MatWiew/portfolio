@@ -1,0 +1,6 @@
+{
+  "name": "SaaS do Zarządzania Projektami",
+  "desc": "Tablice Kanban, role zespołowe, śledzenie czasu, wykresy Gantta i integracja ze Slackiem.",
+  "tech": ["React", "Node.js", "PostgreSQL", "Redis"],
+  "accent": "#00ff87"
+}

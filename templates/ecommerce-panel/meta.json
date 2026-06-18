@@ -1,0 +1,6 @@
+{
+  "name": "Panel E-Commerce",
+  "desc": "Kompletny sklep MERN: panel admina, zarządzanie stanem magazynu w czasie rzeczywistym i integracja Stripe.",
+  "tech": ["React", "Node.js", "MongoDB", "Redis"],
+  "accent": "#00d4ff"
+}

@@ -1,23 +1,26 @@
-import { SystemBar } from "@/components/ui/SystemBar";
-import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { CapabilityMatrix } from "@/components/sections/CapabilityMatrix";
-import { Portfolio } from "@/components/sections/Portfolio";
-import { Shop } from "@/components/sections/Shop";
-import { Contact } from "@/components/sections/Contact";
+import { Nav } from "@/components/Nav";
+import { Hero } from "@/components/Hero";
+import { Templates } from "@/components/Templates";
+import { Projects } from "@/components/Projects";
+import { Contact } from "@/components/Contact";
+import { Footer } from "@/components/Footer";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { CustomCursor } from "@/components/CustomCursor";
 
 export default function Home() {
   return (
-    <div className="scanline-overlay">
-      <SystemBar />
-      <main>
-        <Hero />
-        <About />
-        <CapabilityMatrix />
-        <Portfolio />
-        <Shop />
-        <Contact />
-      </main>
+    <div
+      className="min-h-screen bg-background text-foreground"
+      style={{ fontFamily: "var(--font-sans)" }}
+    >
+      <ScrollProgress />
+      <CustomCursor />
+      <Nav />
+      <Hero />
+      <Templates />
+      <Projects />
+      <Contact />
+      <Footer />
     </div>
   );
 }

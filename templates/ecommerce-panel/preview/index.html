@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel E-Commerce — podgląd</title>
+  <style>
+    :root {
+      --bg: #0a0e16;
+      --card: #10151f;
+      --line: rgba(255, 255, 255, .08);
+      --fg: #e7ecf6;
+      --muted: #7c8aa8;
+      --accent: #00d4ff;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 212, 255, 0.3);
+      border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 212, 255, 0.5);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      letter-spacing: .02em
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent)
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      min-height: calc(100vh - 49px)
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .nav-item {
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: default
+    }
+
+    .nav-item.active {
+      background: rgba(0, 212, 255, .08);
+      color: var(--accent);
+      font-weight: 600
+    }
+
+    .main {
+      padding: 22px
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px
+    }
+
+    .stat .label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em
+    }
+
+    .stat .value {
+      font-size: 24px;
+      font-weight: 800;
+      margin-top: 6px
+    }
+
+    .stat .delta {
+      font-size: 12px;
+      color: #00ff87;
+      margin-top: 4px
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px
+    }
+
+    th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: .05em
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .badge {
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600
+    }
+
+    .badge.ok {
+      background: rgba(0, 255, 135, .12);
+      color: #00ff87
+    }
+
+    .badge.warn {
+      background: rgba(245, 158, 11, .12);
+      color: #f59e0b
+    }
+
+    .bar-wrap {
+      height: 6px;
+      background: rgba(255, 255, 255, .06);
+      border-radius: 6px;
+      overflow: hidden
+    }
+
+    .bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 6px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span> ShopAdmin</div>
+    <div style="color:var(--muted); font-size:12px">admin@shopadmin.dev</div>
+  </div>
+  <div class="layout">
+    <div class="sidebar">
+      <div class="nav-item active">Dashboard</div>
+      <div class="nav-item">Zamówienia</div>
+      <div class="nav-item">Magazyn</div>
+      <div class="nav-item">Klienci</div>
+      <div class="nav-item">Płatności (Stripe)</div>
+      <div class="nav-item">Ustawienia</div>
+    </div>
+    <div class="main">
+      <div class="grid">
+        <div class="stat">
+          <div class="label">Przychód (24h)</div>
+          <div class="value">38 240 zł</div>
+          <div class="delta">+12.4%</div>
+        </div>
+        <div class="stat">
+          <div class="label">Zamówienia</div>
+          <div class="value">214</div>
+          <div class="delta">+6.1%</div>
+        </div>
+        <div class="stat">
+          <div class="label">Stan magazynu</div>
+          <div class="value">4 902 szt.</div>
+          <div class="delta" style="color:#f59e0b">−2.3%</div>
+        </div>
+        <div class="stat">
+          <div class="label">Zwroty</div>
+          <div class="value">7</div>
+          <div class="delta">−1.2%</div>
+        </div>
+      </div>
+      <div class="panel">
+        <table>
+          <thead>
+            <tr>
+              <th>Zamówienie</th>
+              <th>Klient</th>
+              <th>Status</th>
+              <th>Realizacja</th>
+              <th>Kwota</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#10231</td>
+              <td>J. Kowalski</td>
+              <td><span class="badge ok">Wysłane</span></td>
+              <td>
+                <div class="bar-wrap">
+                  <div class="bar" style="width:100%"></div>
+                </div>
+              </td>
+              <td>249 zł</td>
+            </tr>
+            <tr>
+              <td>#10232</td>
+              <td>A. Nowak</td>
+              <td><span class="badge warn">Pakowanie</span></td>
+              <td>
+                <div class="bar-wrap">
+                  <div class="bar" style="width:60%"></div>
+                </div>
+              </td>
+              <td>1 120 zł</td>
+            </tr>
+            <tr>
+              <td>#10233</td>
+              <td>M. Zielińska</td>
+              <td><span class="badge ok">Wysłane</span></td>
+              <td>
+                <div class="bar-wrap">
+                  <div class="bar" style="width:100%"></div>
+                </div>
+              </td>
+              <td>89 zł</td>
+            </tr>
+            <tr>
+              <td>#10234</td>
+              <td>P. Wójcik</td>
+              <td><span class="badge warn">Nowe</span></td>
+              <td>
+                <div class="bar-wrap">
+                  <div class="bar" style="width:15%"></div>
+                </div>
+              </td>
+              <td>349 zł</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

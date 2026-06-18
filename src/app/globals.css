@@ -1,205 +1,137 @@
 @import "tailwindcss";
 
-@theme {
-  /* Core palette — Cyber-Noir Terminal (Indigo variant) */
-  --color-bg-void: #000000;
-  --color-bg-panel: #07070b;
-  --color-bg-panel-header: #0d0d16;
-  --color-border-dim: #211f33;
-  --color-border-bright: #3c3489;
+/* ── Design tokens — Mateusz Wiewióra Portfolio ── */
+:root {
+  --background: #07090f;
+  --foreground: #dde3f0;
+  --card: #0d1220;
+  --primary: #00d4ff;
+  --primary-foreground: #000000;
+  --secondary: #111827;
+  --muted: #111827;
+  --muted-foreground: #5a6a8a;
+  --accent: #7c3aed;
+  --accent-2: #00ff87;
+  --border-color: rgba(255, 255, 255, 0.07);
 
-  --color-accent-green: #7f77dd;
-  --color-accent-green-dim: #4a4399;
-  --color-accent-cyan: #9b95e8;
-  --color-accent-yellow: #b8b3ed;
-  --color-accent-red: #ff5f5f;
-
-  --color-text-primary: #d6d3f0;
-  --color-text-dim: #5e5a85;
-  --color-text-faint: #322f54;
-
-  /* Fonts */
-  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
-  --font-sans: var(--font-sans), "Inter", sans-serif;
-
-  /* Shadows / glow */
-  --shadow-glow-green: 0 0 8px rgba(127, 119, 221, 0.55), 0 0 24px rgba(127, 119, 221, 0.25);
-  --shadow-glow-cyan: 0 0 8px rgba(155, 149, 232, 0.55), 0 0 24px rgba(155, 149, 232, 0.25);
-  --shadow-panel: 0 0 0 1px rgba(60, 52, 137, 0.4), 0 12px 40px rgba(0, 0, 0, 0.6);
-
-  --animate-blink: blink 1s step-end infinite;
-  --animate-scan: scan 8s linear infinite;
+  --font-display: "Bricolage Grotesque", sans-serif;
+  --font-sans: "DM Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-border: var(--border-color);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
-@keyframes scan {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100%);
-  }
+* {
+  border-color: var(--border-color);
 }
 
 html {
   scroll-behavior: smooth;
+  /* Powiększona bazowa skala typografii całej strony (+12.5%) */
+  font-size: 18px;
 }
 
 body {
-  background-color: var(--color-bg-void);
-  background-image:
-    linear-gradient(rgba(127, 119, 221, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(127, 119, 221, 0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
 }
 
-/* Scanline overlay */
-.scanline-overlay::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(127, 119, 221, 0.035) 50%,
-    transparent 100%
-  );
-  background-size: 100% 4px;
-  mix-blend-mode: overlay;
+/* Ukrywamy systemowy kursor tylko wtedy, gdy nasz custom cursor jest
+   faktycznie aktywny (desktop + ruch włączony) — patrz CustomCursor.tsx.
+   Dzięki temu nikt nigdy nie zostaje bez żadnego wskaźnika. */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
 }
 
-/* Terminal window panel */
-.terminal-panel {
-  background-color: var(--color-bg-panel);
-  border: 1px solid var(--color-border-dim);
-  box-shadow: var(--shadow-panel);
-}
-
-.terminal-header {
-  background-color: var(--color-bg-panel-header);
-  border-bottom: 1px solid var(--color-border-dim);
-}
-
-/* Glow text utilities */
-.text-glow-green {
-  color: var(--color-accent-green);
-  text-shadow: 0 0 6px rgba(127, 119, 221, 0.6), 0 0 18px rgba(127, 119, 221, 0.3);
-}
-
-.text-glow-cyan {
-  color: var(--color-accent-cyan);
-  text-shadow: 0 0 6px rgba(155, 149, 232, 0.6), 0 0 18px rgba(155, 149, 232, 0.3);
-}
-
-/* Custom scrollbar */
+/* Custom scrollbar — matches the cyan signature accent */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-bg-void);
+  background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border-bright);
+  background: rgba(0, 212, 255, 0.25);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 212, 255, 0.45);
 }
 
-/* Glitch text effect — RGB-split layers fire periodically + on hover */
-.glitch-text {
-  position: relative;
-  display: inline-block;
+/* Selection */
+::selection {
+  background: rgba(0, 212, 255, 0.25);
+  color: #fff;
 }
 
-.glitch-text::before,
-.glitch-text::after {
-  content: attr(data-glitch-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.glitch-text::before {
-  color: var(--color-accent-cyan);
-  -webkit-text-fill-color: var(--color-accent-cyan);
-  z-index: -1;
-  animation: glitch-before 6s infinite;
-}
-
-.glitch-text::after {
-  color: var(--color-accent-red);
-  -webkit-text-fill-color: var(--color-accent-red);
-  z-index: -2;
-  animation: glitch-after 6s infinite;
-}
-
-.glitch-text:hover::before,
-.glitch-text:hover::after {
-  animation-duration: 0.4s;
-}
-
-@keyframes glitch-before {
-  0%, 92%, 100% {
-    opacity: 0;
-    transform: translate(0, 0);
-  }
-  93% {
-    opacity: 0.7;
-    transform: translate(-3px, 1px);
-    clip-path: inset(10% 0 60% 0);
-  }
-  94% {
-    opacity: 0.7;
-    transform: translate(2px, -1px);
-    clip-path: inset(60% 0 5% 0);
-  }
-  95% {
-    opacity: 0.5;
-    transform: translate(-2px, 0);
-    clip-path: inset(30% 0 40% 0);
-  }
-  96% {
-    opacity: 0;
-  }
-}
-
-@keyframes glitch-after {
-  0%, 90%, 100% {
-    opacity: 0;
-    transform: translate(0, 0);
-  }
-  91% {
-    opacity: 0.7;
-    transform: translate(3px, -1px);
-    clip-path: inset(20% 0 50% 0);
-  }
-  92% {
-    opacity: 0.7;
-    transform: translate(-2px, 1px);
-    clip-path: inset(50% 0 15% 0);
-  }
-  93% {
-    opacity: 0.5;
-    transform: translate(2px, 0);
-    clip-path: inset(5% 0 70% 0);
-  }
-  94% {
-    opacity: 0;
-  }
-}
-
+/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .glitch-text::before,
-  .glitch-text::after {
-    animation: none;
-    display: none;
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+/* Visible keyboard focus */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Dodatkowe animacje współdzielone między komponentami ── */
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float-y {
+  animation: float-y 4.5s ease-in-out infinite;
+}
+
+@keyframes border-glow {
+  0%, 100% { box-shadow: 0 0 0px rgba(0, 212, 255, 0); }
+  50% { box-shadow: 0 0 24px rgba(0, 212, 255, 0.18); }
+}
+.animate-border-glow {
+  animation: border-glow 3.2s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 14s linear infinite;
 }
