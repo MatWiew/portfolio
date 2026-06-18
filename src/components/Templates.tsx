@@ -93,8 +93,9 @@ export function Templates() {
               ))}
             </div>
 
+            {/* ZMIANA TUTAJ: Dodano 'hidden md:flex' w klasach kontenera */}
             {/* Przełącznik urządzeń */}
-            <div className="flex items-center gap-2 mb-5">
+            <div className="hidden md:flex items-center gap-2 mb-5">
               {(["desktop", "tablet", "mobile"] as Device[]).map((d) => {
                 const Icon =
                   d === "desktop"
@@ -180,7 +181,7 @@ export function Templates() {
                   ) : (
                     <iframe
                       key={device}
-                      src={`/api/templates/${active?.slug}/preview?device=${device}`}
+                      src={`/api/templates/${active?.slug}/preview`}
                       className="w-full border-0"
                       style={{ height: 460 }}
                       title={active?.name}
