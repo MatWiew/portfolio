@@ -10,7 +10,7 @@ const TEMPLATES_DIR = path.join(process.cwd(), "templates");
 const SAFE_SLUG = /^[a-z0-9-]+$/i;
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest, // Zmienione z _req, aby użyć go do odczytania query params
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
@@ -34,9 +34,28 @@ export async function GET(
     );
   }
 
+  // 1. Wyciągamy parametr ?device z adresu URL (domyślnie "desktop")
+  const { searchParams } = new URL(req.url);
+  const device = searchParams.get("device") || "desktop";
+
+  // 2. Definiujemy oszukany viewport dla urządzeń mobilnych
+  let viewportMeta = '<meta name="viewport" content="width=device-width, initial-scale=1">';
+  
+  if (device === "desktop") {
+    viewportMeta = '<meta name="viewport" content="width=1200">'; // Zmusza telefon do renderowania wersji PC
+  } else if (device === "tablet") {
+    viewportMeta = '<meta name="viewport" content="width=768">';
+  }
+
+  // 3. Czytamy oryginalny plik HTML
   const html = fs.readFileSync(filePath, "utf-8");
 
-  return new NextResponse(html, {
+  // 4. Modyfikujemy kod HTML w pamięci RAM przed wysłaniem
+  // Usuwamy stary tag viewport (jeśli istnieje) i wklejamy nowy zaraz po <head>
+  let modifiedHtml = html.replace(/<meta name="viewport"[^>]*>/gi, "");
+  modifiedHtml = modifiedHtml.replace(/<head>/i, `<head>\n    ${viewportMeta}`);
+
+  return new NextResponse(modifiedHtml, {
     status: 200,
     headers: {
       "Content-Type": "text/html; charset=utf-8",

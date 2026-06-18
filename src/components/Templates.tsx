@@ -180,7 +180,7 @@ export function Templates() {
                   ) : (
                     <iframe
                       key={device}
-                      src={`/api/templates/${active?.slug}/preview`}
+                      src={`/api/templates/${active?.slug}/preview?device=${device}`}
                       className="w-full border-0"
                       style={{ height: 460 }}
                       title={active?.name}
