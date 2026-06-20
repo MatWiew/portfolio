@@ -104,11 +104,11 @@ export function Hero() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => scrollTo("templates")}
+            onClick={() => scrollTo("projects")}
             className="group flex items-center gap-2 bg-primary text-black text-sm font-bold tracking-wider uppercase px-8 py-4 rounded-full hover:bg-primary/90 transition-colors"
             style={{ fontFamily: "var(--font-mono)" }}
           >
-            Zobacz szablony
+            Zobacz moje prace
             <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </motion.button>
           <motion.button
@@ -153,7 +153,7 @@ export function Hero() {
         animate={{ y: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 text-primary/30 cursor-pointer"
-        onClick={() => scrollTo("templates")}
+        onClick={() => scrollTo("projects")}
       >
         <ArrowDown className="w-5 h-5" />
       </motion.div>

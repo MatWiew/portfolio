@@ -62,9 +62,10 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 5,
-    title: "Wewnętrzne narzędzie do wyceny projektów",
-    desc: "Aplikacja do szybkiej kalkulacji wycen dla klientów freelance — automatyczne sumowanie godzin, stawek i generowanie gotowego podsumowania do wysłania mailem. Projekt prywatny, bez publicznego demo.",
-    tech: ["React", "Node.js", "Express"],
+    title: "MicToPC",
+    desc: "Aplikacja zamieniająca telefon z Androidem w bezprzewodowy mikrofon dla komputera — działa przez Wi-Fi, bez kabli i sterowników. Dźwięk trafia do PC jako wirtualne urządzenie audio (VB-Cable), dostępne dla dowolnej aplikacji.",
+    tech: ["C#", "Android", "Networking", "Audio"],
+    github: "https://github.com/MatWiew/MicToPC",
     span: "md:col-span-2",
     tall: false,
   },

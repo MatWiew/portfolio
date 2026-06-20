@@ -20,7 +20,7 @@ export function MagneticBtn({
   href?: string;
   target?: string;
   rel?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
   const [xy, setXY] = useState({ x: 0, y: 0 });

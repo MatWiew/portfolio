@@ -14,10 +14,12 @@ export function TiltCard({
   children,
   className,
   style,
+  onClick,
 }: {
   children: ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  onClick?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -56,6 +58,7 @@ export function TiltCard({
       ref={ref}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
+      onClick={onClick}
       style={{
         rotateX: springRX,
         rotateY: springRY,

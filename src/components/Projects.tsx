@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { GitHubIcon } from "./GitHubIcon";
@@ -8,6 +9,12 @@ import { TiltCard } from "./TiltCard";
 import { PROJECTS } from "@/data/projects";
 
 export function Projects() {
+  // Na urządzeniach dotykowych nie ma stanu hover, więc kliknięcie w kartę
+  // samo w sobie pełni rolę "rozwinięcia" opisu — działa jak przełącznik
+  // (tap ponownie zwija). Na desktopie hover nadal działa jak wcześniej,
+  // niezależnie od tego stanu.
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+
   return (
     <section id="projects" className="py-28 px-6 md:px-16">
       <div className="max-w-7xl mx-auto">
@@ -33,7 +40,9 @@ export function Projects() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {PROJECTS.map((p, i) => (
+          {PROJECTS.map((p, i) => {
+            const isOpen = expandedId === p.id;
+            return (
             <motion.div
               key={p.id}
               initial={{ opacity: 0, y: 24 }}
@@ -43,12 +52,13 @@ export function Projects() {
               className={p.span ?? ""}
             >
             <TiltCard
-              className="group relative overflow-hidden rounded-2xl border border-white/[0.07]"
+              onClick={() => setExpandedId(isOpen ? null : p.id)}
+              className="group relative overflow-hidden rounded-2xl border border-white/[0.07] cursor-pointer"
               style={{ minHeight: p.tall ? 340 : 240 }}
             >
               {p.image ? (
                 <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  className={`absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105 ${isOpen ? "scale-105" : ""}`}
                   style={{ backgroundImage: `url(${p.image})` }}
                 />
               ) : (
@@ -56,7 +66,7 @@ export function Projects() {
               )}
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/50 to-black/10" />
-              <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.03] transition-colors duration-500" />
+              <div className={`absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.03] transition-colors duration-500 ${isOpen ? "bg-primary/[0.03]" : ""}`} />
 
               <div className="relative z-10 flex flex-col justify-end h-full p-6">
                 <div className="flex flex-wrap gap-1.5 mb-3">
@@ -76,15 +86,16 @@ export function Projects() {
                 >
                   {p.title}
                 </h3>
-                <p className="text-sm text-white/50 leading-relaxed max-h-0 overflow-hidden group-hover:max-h-28 transition-all duration-500">
+                <p className={`text-sm text-white/50 leading-relaxed overflow-hidden transition-all duration-500 group-hover:max-h-28 ${isOpen ? "max-h-28" : "max-h-0"}`}>
                   {p.desc}
                 </p>
-                <div className="flex gap-3 mt-4 translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                <div className={`flex gap-3 mt-4 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 ${isOpen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}>
                   {p.github && (
                     <MagneticBtn
                       href={p.github}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="flex items-center gap-1.5 text-xs bg-white/10 hover:bg-white/20 border border-white/20 rounded-full px-4 py-2 text-white transition-colors"
                     >
                       <GitHubIcon className="w-3.5 h-3.5" />
@@ -96,6 +107,7 @@ export function Projects() {
                       href={p.link}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="flex items-center gap-1.5 text-xs bg-primary hover:bg-primary/90 rounded-full px-4 py-2 text-black font-bold transition-colors"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -114,7 +126,8 @@ export function Projects() {
               </div>
             </TiltCard>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
