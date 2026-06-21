@@ -1,6 +1,0 @@
-{
-  "name": "Platforma Społecznościowa",
-  "desc": "Feed w czasie rzeczywistym, czat WebSocket, autoryzacja JWT i upload zdjęć do chmury.",
-  "tech": ["React", "Express", "MongoDB", "Socket.io"],
-  "accent": "#7c3aed"
-}

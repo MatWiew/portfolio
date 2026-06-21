@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const LINKS: [string, string][] = [
   ["hero", "Start"],
-  ["templates", "Szablony"],
+  ["offer", "Oferta"],
   ["projects", "Projekty"],
   ["contact", "Kontakt"],
 ];

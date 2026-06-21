@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle, AlertCircle, Mail, Phone } from "lucide-react";
 import { LinkedInIcon } from "./LinkedInIcon";
 import { GitHubIcon } from "./GitHubIcon";
 import { FloatField } from "./FloatField";
 import { TopicSelect, TOPICS } from "./TopicSelect";
+import { useContactPrefill } from "./ContactPrefillContext";
 import { SITE } from "@/data/site";
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -15,6 +16,27 @@ export function Contact() {
   const [form, setForm] = useState({ name: "", email: "", topic: TOPICS[0] as string, msg: "" });
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const { prefill } = useContactPrefill();
+  const [justPrefilled, setJustPrefilled] = useState(false);
+
+  // Gdy ktoś kliknie "Zapytaj o [usługę]" w sekcji Oferta, kontekst dostaje
+  // nową wartość (nonce się zmienia) — wtedy nadpisujemy temat i treść
+  // wiadomości, nie ruszając imienia/maila, jeśli ktoś już je wpisał.
+  useEffect(() => {
+    if (!prefill) return;
+    // setState jest odroczony poza synchroniczne ciało efektu (przez
+    // requestAnimationFrame), żeby uniknąć kaskadowego re-renderu
+    // wywołanego bezpośrednio przy zmianie zależności efektu.
+    const raf = requestAnimationFrame(() => {
+      setForm((p) => ({ ...p, topic: prefill.topic, msg: prefill.message }));
+      setJustPrefilled(true);
+    });
+    const t = setTimeout(() => setJustPrefilled(false), 1200);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(t);
+    };
+  }, [prefill]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,6 +143,7 @@ export function Contact() {
                   value={form.msg}
                   onChange={(v) => setForm((p) => ({ ...p, msg: v }))}
                   textarea
+                  highlight={justPrefilled}
                 />
 
                 {status === "error" && (

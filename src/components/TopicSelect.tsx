@@ -3,10 +3,11 @@
 import { motion } from "framer-motion";
 
 export const TOPICS = [
-  "Zapytaj o szablon",
-  "Wycena projektu",
-  "Współpraca / freelance",
-  "Poprawki na istniejącej stronie",
+  "Wizytówki",
+  "Sklepy WWW",
+  "Landing Page",
+  "Strony Firmowe",
+  "Aplikacje Webowe",
   "Inne",
 ] as const;
 

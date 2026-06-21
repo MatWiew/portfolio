@@ -12,6 +12,7 @@ export function FloatField({
   name,
   required,
   error,
+  highlight,
 }: {
   label: string;
   type?: string;
@@ -21,6 +22,9 @@ export function FloatField({
   name: string;
   required?: boolean;
   error?: string;
+  /** Gdy true, pole na krótko "pulsuje" — sygnalizuje że wartość została
+   * wstawiona automatycznie (np. po kliknięciu "Zapytaj o..." w ofercie). */
+  highlight?: boolean;
 }) {
   const [focused, setFocused] = useState(false);
   const floated = focused || value.length > 0;
@@ -29,7 +33,15 @@ export function FloatField({
     (error ? "border-red-500/50" : "border-white/10");
 
   return (
-    <div className="relative">
+    <motion.div
+      className="relative rounded-xl"
+      animate={
+        highlight
+          ? { boxShadow: ["0 0 0 0 rgba(0,212,255,0)", "0 0 0 4px rgba(0,212,255,0.18)", "0 0 0 0 rgba(0,212,255,0)"] }
+          : {}
+      }
+      transition={{ duration: 1.1, ease: "easeOut" }}
+    >
       {textarea ? (
         <textarea
           rows={4}
@@ -75,6 +87,6 @@ export function FloatField({
       {error && (
         <p className="mt-1.5 text-xs text-red-400 font-mono px-1">{error}</p>
       )}
-    </div>
+    </motion.div>
   );
 }
