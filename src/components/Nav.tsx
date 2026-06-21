@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 const LINKS: [string, string][] = [
   ["hero", "Start"],
   ["offer", "Oferta"],
+  ["faq", "FAQ"],
   ["projects", "Projekty"],
   ["contact", "Kontakt"],
 ];
@@ -39,12 +40,18 @@ export function Nav() {
   return (
     <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 backdrop-blur-xl border-b border-white/[0.05]">
       <motion.span
-        whileHover={{ letterSpacing: "0.3em" }}
-        transition={{ duration: 0.3 }}
+        whileHover="hover"
         style={{ fontFamily: "var(--font-mono)" }}
-        className="text-primary text-xs tracking-[0.2em] uppercase cursor-default"
+        className="text-primary text-xs tracking-[0.2em] uppercase cursor-default select-none"
       >
-        &lt;mw.dev /&gt;
+        <motion.span
+          variants={{
+            hover: { textShadow: "0 0 12px rgba(0,212,255,0.7)" },
+          }}
+          transition={{ duration: 0.25 }}
+        >
+          &lt;mw.dev /&gt;
+        </motion.span>
       </motion.span>
 
       <div className="hidden md:flex gap-8">

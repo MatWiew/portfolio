@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowDown, ChevronRight } from "lucide-react";
 import { ParticleCanvas } from "./ParticleCanvas";
 import { useScramble } from "./useScramble";
+import { GlitchText } from "./GlitchText";
 import { SKILLS } from "@/data/skills";
 
 function scrollTo(id: string) {
@@ -68,9 +69,19 @@ export function Hero() {
           style={{ fontFamily: "var(--font-display)", lineHeight: 0.88 }}
           className="text-[clamp(3.4rem,11vw,9rem)] font-black tracking-tighter mb-6 select-none"
         >
-          <span className="block text-foreground">{h1 || "\u00A0"}</span>
+          <span className="block text-foreground">
+            {h1 === "MATEUSZ" ? (
+              <GlitchText text={h1} startDelay={600} />
+            ) : (
+              h1 || "\u00A0"
+            )}
+          </span>
           <span className="block" style={{ color: "#00d4ff" }}>
-            {h2 || "\u00A0"}
+            {h2 === "WIEWIÓRA" ? (
+              <GlitchText text={h2} startDelay={1100} />
+            ) : (
+              h2 || "\u00A0"
+            )}
           </span>
           <span
             className="block text-muted-foreground/50 font-light"

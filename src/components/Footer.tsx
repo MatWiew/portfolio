@@ -11,9 +11,17 @@ export function Footer() {
     <footer className="border-t border-white/[0.05] px-6 md:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <span
         style={{ fontFamily: "var(--font-mono)" }}
-        className="text-xs text-muted-foreground text-center sm:text-left"
+        className="text-xs text-muted-foreground text-center sm:text-left select-none"
       >
-        © {new Date().getFullYear()} {SITE.name} — {SITE.role}
+        © {new Date().getFullYear()}
+        
+        <span 
+          className="text-white/[0.03] text-[15px] font-bold inline-block -translate-x-[-1px] translate-y-[3px] rotate-12" 
+          title="67"
+        >
+          7
+        </span>{" "}
+        {SITE.name} — {SITE.role}
       </span>
       <div className="flex gap-5">
         <motion.a
