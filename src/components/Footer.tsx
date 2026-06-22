@@ -16,7 +16,7 @@ export function Footer() {
         © {new Date().getFullYear()}
         
         <span 
-          className="absolute text-white/[0.12] text-[15px] font-bold inline-block -translate-x-[-1px] translate-y-[3px] rotate-12" 
+          className="absolute text-white/[0.06] text-[15px] font-bold inline-block -translate-x-[-1px] translate-y-[3px] rotate-12" 
           title="67"
         >
           7
