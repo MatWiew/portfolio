@@ -90,7 +90,7 @@ export function Contact() {
             coś razem
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Porozmawiajmy o Twoim projekcie → Napisz do mnie - chętnie doradzę Ci w ramach darmowej konsultacji.
+            Porozmawiajmy o Twoim projekcie ➔ Napisz do mnie aby umówić się na bezpłatną konsultację.
           </p>
         </motion.div>
 
