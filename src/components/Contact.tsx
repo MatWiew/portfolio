@@ -10,7 +10,7 @@ import { TopicSelect, TOPICS } from "./TopicSelect";
 import { useContactPrefill } from "./ContactPrefillContext";
 import { SITE } from "@/data/site";
 import Clarity from "@microsoft/clarity";
-import { analytics } from "@/components/Analytics";
+import { trackCustomEvent } from "@/components/Analytics";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -55,7 +55,7 @@ export function Contact() {
         setStatus("error");
 
         // Śledzenie błędu w GA
-        analytics.track("contact_form_error", {
+        trackCustomEvent("contact_form_error", {
           error_type: "server_or_validation",
           error_message: errorMessage,
           topic: form.topic,
@@ -66,7 +66,7 @@ export function Contact() {
       // SUKCES
       setStatus("sent");
       Clarity.event("contact_form_success"); // Event dla Clarity
-      analytics.track("contact_form_success", { // Event dla GA
+      trackCustomEvent("contact_form_success", { // Event dla GA
         topic: form.topic,
       });
 
@@ -77,7 +77,7 @@ export function Contact() {
       setStatus("error");
 
       // Śledzenie błędu sieciowego w GA
-      analytics.track("contact_form_error", {
+      trackCustomEvent("contact_form_error", {
         error_type: "network_error",
         error_message: networkError,
         topic: form.topic,

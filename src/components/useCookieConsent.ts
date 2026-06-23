@@ -28,6 +28,7 @@ export function useCookieConsent() {
     setConsent(level);
     localStorage.setItem(KEY, level);
     applyConsent(level);
+    window.dispatchEvent(new Event("cookie-consent-changed"));
     if (level !== "all") {
       // Chowamy baner z opóźnieniem (dajemy czas na animację zjedzenia)
       setTimeout(() => setVisible(false), level === "none" ? 1800 : 900);
