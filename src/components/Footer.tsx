@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
+import Link from "next/link"; // Importujemy Link z next/link
 import { LinkedInIcon } from "./LinkedInIcon";
 import { GitHubIcon } from "./GitHubIcon";
 import { SITE } from "@/data/site";
@@ -11,18 +12,19 @@ export function Footer() {
     <footer className="border-t border-white/[0.05] px-6 md:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <span
         style={{ fontFamily: "var(--font-mono)" }}
-        className="text-xs text-muted-foreground text-center sm:text-left select-none"
+        className="text-xs text-muted-foreground text-center sm:text-left select-none flex flex-wrap justify-center sm:justify-start gap-3 items-center"
       >
-        © {new Date().getFullYear()}
+        <span>© {new Date().getFullYear()} {SITE.name} — {SITE.role}</span>
         
-        <span 
-          className="absolute text-white/[0.06] text-[15px] font-bold inline-block -translate-x-[-1px] translate-y-[3px] rotate-12" 
-          title="67"
+        {/* Link do polityki prywatności */}
+        <Link 
+          href="/polityka-prywatnosci" 
+          className="hover:text-primary transition-colors underline underline-offset-4"
         >
-          7
-        </span>{" "}
-        {SITE.name} — {SITE.role}
+          Polityka prywatności
+        </Link>
       </span>
+
       <div className="flex gap-5">
         <motion.a
           whileHover={{ y: -3, scale: 1.12 }}
