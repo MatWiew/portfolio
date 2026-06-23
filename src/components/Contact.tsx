@@ -9,6 +9,7 @@ import { FloatField } from "./FloatField";
 import { TopicSelect, TOPICS } from "./TopicSelect";
 import { useContactPrefill } from "./ContactPrefillContext";
 import { SITE } from "@/data/site";
+import Clarity from "@microsoft/clarity";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -59,6 +60,7 @@ export function Contact() {
       }
 
       setStatus("sent");
+      Clarity.event("contact_form_success");
     } catch {
       setErrorMsg("Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.");
       setStatus("error");

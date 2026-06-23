@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, DM_Sans, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
+import Clarity from '@microsoft/clarity';
 import "./globals.css";
+
+const projectId = "xbh4b3w16l"
+
+Clarity.init(projectId);
 
 const display = Bricolage_Grotesque({
   variable: "--font-display",
@@ -75,6 +81,28 @@ export default function RootLayout({
         }}
       >
         {children}
+        {/* Pierwszy skrypt ładujący bibliotekę Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-9TB50FXKYZ"
+          strategy="afterInteractive"
+        />
+
+        {/* Drugi skrypt inicjalizujący GA z domyślną odmową (denied) */}
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            
+            // Ustawienie domyślnego braku zgody na analitykę i reklamy przed konfiguracją
+            gtag('consent', 'default', {
+              'ad_storage': 'denied',
+              'analytics_storage': 'denied'
+            });
+
+            gtag('js', new Date());
+            gtag('config', 'G-9TB50FXKYZ');
+          `}
+        </Script>
       </body>
     </html>
   );

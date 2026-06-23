@@ -84,7 +84,7 @@ export function CustomCursor() {
         style={{ left: dotX, top: dotY, opacity: visible ? 1 : 0 }}
         animate={{ scale: pressed ? 0.5 : 1 }}
         transition={{ duration: 0.15 }}
-        className="fixed z-[100] w-1.5 h-1.5 rounded-full bg-primary pointer-events-none -translate-x-1/2 -translate-y-1/2"
+        className="fixed z-[300] w-1.5 h-1.5 rounded-full bg-primary pointer-events-none -translate-x-1/2 -translate-y-1/2"
         aria-hidden="true"
       />
 
@@ -98,7 +98,7 @@ export function CustomCursor() {
           borderColor: hovering ? "rgba(0,212,255,0.7)" : "rgba(0,212,255,0.4)",
         }}
         transition={{ type: "spring", stiffness: 400, damping: 32 }}
-        className="fixed z-[100] pointer-events-none rounded-full border -translate-x-1/2 -translate-y-1/2 mix-blend-difference"
+        className="fixed z-[300] pointer-events-none rounded-full border -translate-x-1/2 -translate-y-1/2 mix-blend-difference"
         aria-hidden="true"
       />
     </>

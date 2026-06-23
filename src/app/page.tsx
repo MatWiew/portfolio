@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { CustomCursor } from "@/components/CustomCursor";
 import { ContactPrefillProvider } from "@/components/ContactPrefillContext";
+import { CookieConsent } from "@/components/CookieConsent";
 
 export default function Home() {
   return (
@@ -21,10 +22,11 @@ export default function Home() {
         <Nav />
         <Hero />
         <Offer />
-        <Projects />
         <Faq />
+        <Projects />
         <Contact />
         <Footer />
+        <CookieConsent />
       </div>
     </ContactPrefillProvider>
   );
