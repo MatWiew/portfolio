@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useId } from "react";
+import { useState, useId } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCookieConsent, type ConsentLevel } from "./useCookieConsent";
 
@@ -38,7 +38,7 @@ function CookieSvg({ crumbs }: { crumbs: boolean }) {
     { x: 30, y: 10, dx: -5, dy: -14 },
     { x: 55, y: 5, dx: 3, dy: -16 },
     { x: 100, y: 20, dx: 14, dy: -8 },
-    { x: 112, y: 45, dx: 16, py: 2 },
+    { x: 112, y: 45, dx: 16, dy: 2 },
     { x: 40, y: 115, dx: -8, dy: 14 },
     { x: 70, y: 118, dx: 2, dy: 16 },
   ];
@@ -104,7 +104,7 @@ function CookieSvg({ crumbs }: { crumbs: boolean }) {
         <path d={cookiePath} fill={`url(#shine-${id})`} />
       </g>
 
-      {/* NEONOWY KONTUR ZEWNĘTRZNY: Idealnie dopasowany do pełnego kształtu */}
+      {/* NEONOWY KONTUR ZEWNĘTRZNY */}
       <motion.path
         d={cookiePath}
         fill="none"
@@ -148,25 +148,32 @@ export function CookieConsent() {
   const { consent, visible, choose } = useCookieConsent();
 
   const [crumbs, setCrumbs] = useState(false);
-  const [materializing, setMaterializing] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
 
   const handleChoose = (level: ConsentLevel) => {
     if (level === consent) return;
 
     if (level === "none") {
+      // Dla "Odrzuć" strzelamy okruszkami i zamykamy po chwili, by było widać efekt
       setCrumbs(true);
-      setTimeout(() => setCrumbs(false), 2000);
-    } else if (level === "all" && consent !== "all") {
-      setMaterializing(true);
-      setTimeout(() => setMaterializing(false), 600);
+      setTimeout(() => {
+        setCrumbs(false);
+        setIsClosed(true);
+      }, 800);
+    } else {
+      // Dla akceptacji zamykamy od razu
+      setIsClosed(true);
     }
 
     choose(level);
   };
 
+  // Jeśli globalny hook twierdzi, że nie powinno być go widać lub zamknęliśmy go lokalnie – ukrywamy
+  const shouldShow = visible && !isClosed;
+
   return (
     <AnimatePresence>
-      {visible && (
+      {shouldShow && (
         <motion.div
           initial={{ opacity: 0, y: 80 }}
           animate={{ opacity: 1, y: 0 }}
@@ -189,25 +196,9 @@ export function CookieConsent() {
             <div className="p-5">
               <div className="flex items-start gap-5">
                 <div className="flex-shrink-0 flex items-center justify-center w-[100px]">
-                  <motion.div
-                    animate={
-                      materializing
-                        ? {
-                            scale: [0.5, 1.08, 1],
-                            opacity: [0, 1, 1],
-                            filter: [
-                              "brightness(3) blur(4px)",
-                              "brightness(1.2) blur(0px)",
-                              "brightness(1) blur(0px)",
-                            ],
-                          }
-                        : { scale: 1, opacity: 1, filter: "brightness(1)" }
-                    }
-                    transition={{ duration: 0.5 }}
-                    style={{ width: 100, display: "flex", justifyContent: "center" }}
-                  >
+                  <div style={{ width: 100, display: "flex", justifyContent: "center" }}>
                     <CookieSvg crumbs={crumbs} />
-                  </motion.div>
+                  </div>
                 </div>
 
                 <div className="flex-1 min-w-0">
