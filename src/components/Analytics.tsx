@@ -25,14 +25,15 @@ export default function AnalyticsSync() {
     checkConsent();
 
     window.addEventListener("cookie-consent-changed", checkConsent);
-    return () => window.removeEventListener("cookie-consent-changed", checkConsent);
+    return () =>
+      window.removeEventListener("cookie-consent-changed", checkConsent);
   }, []);
 
   useEffect(() => {
     // JEŚLI NIE MA ZGODY - ABSOLUTNA CISZA
     if (!hasConsent) return;
 
-    // Inicjalizujemy Google Analytics DOPIERO TUTAJ, gdy użytkownik kliknął akceptację
+    // Inicjalizujemy Google Analytics DOPIERO TUTAJ
     if (!analyticsInstance) {
       analyticsInstance = Analytics({
         app: "Mateusz Wiewióra - Portfolio",
@@ -46,8 +47,14 @@ export default function AnalyticsSync() {
 
     // Odpalamy Clarity
     Clarity.init(projectId);
-    
-    // Logujemy pierwszą odsłonę strony zaraz po wyrażeniu zgody
+
+    // NAKŁADAMY ZGODĘ DLA CLARITY ZARAZ PO INICJALIZACJI
+    Clarity.consentV2({
+      ad_Storage: "denied",
+      analytics_Storage: "granted",
+    });
+
+    // Logujemy pierwszą odsłonę strony
     analyticsInstance.page();
   }, [hasConsent]);
 

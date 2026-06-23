@@ -44,30 +44,31 @@ function applyConsent(level: ConsentLevel) {
   if (typeof window === "undefined") return;
 
   // 1. Obsługa Google Analytics / gtag
-  if (typeof (window as any).gtag === "function") {
-    (window as any).gtag("consent", "update", {
-      analytics_storage: level === "all" ? "granted" : "denied",
-      ad_storage: "denied",
+  (window as any).dataLayer = (window as any).dataLayer || [];
+  const gtag = (window as any).gtag || ((...args: any[]) => { 
+      (window as any).dataLayer.push(args); 
     });
-  }
 
   // 2. Obsługa Microsoft Clarity przez API v2
-  if (level === "all") {
-    Clarity.consentV2({
-      ad_Storage: "denied",
-      analytics_Storage: "granted"
-    });
-  } else {
-    Clarity.consentV2({
-      ad_Storage: "denied",
-      analytics_Storage: "denied"
-    });
+  try {
+    if (level === "all") {
+      Clarity.consentV2({
+        ad_Storage: "denied",
+        analytics_Storage: "granted"
+      });
+    } else {
+      Clarity.consentV2({
+        ad_Storage: "denied",
+        analytics_Storage: "denied"
+      });
+    }
+  } catch (error) {
   }
 }
 
 // Rozszerzenie globalnych typów, żeby TS nie krzyczał na window.gtag/clarity
 declare global {
   interface Window {
-    gtag?: (...args: unknown[]) => void;
+    gtag?: (...args: any[]) => void;
   }
 }
