@@ -9,7 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@analytics/google-analytics": "^1.1.0",
     "@microsoft/clarity": "^1.0.2",
+    "analytics": "^0.8.19",
     "framer-motion": "^12.40.0",
     "lucide-react": "^1.20.0",
     "next": "16.2.9",
