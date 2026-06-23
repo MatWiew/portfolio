@@ -9,8 +9,6 @@ import { FloatField } from "./FloatField";
 import { TopicSelect, TOPICS } from "./TopicSelect";
 import { useContactPrefill } from "./ContactPrefillContext";
 import { SITE } from "@/data/site";
-import Clarity from "@microsoft/clarity";
-import { trackCustomEvent } from "@/components/Analytics";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -21,8 +19,14 @@ export function Contact() {
   const { prefill } = useContactPrefill();
   const [justPrefilled, setJustPrefilled] = useState(false);
 
+  // Gdy ktoś kliknie "Zapytaj o [usługę]" w sekcji Oferta, kontekst dostaje
+  // nową wartość (nonce się zmienia) — wtedy nadpisujemy temat i treść
+  // wiadomości, nie ruszając imienia/maila, jeśli ktoś już je wpisał.
   useEffect(() => {
     if (!prefill) return;
+    // setState jest odroczony poza synchroniczne ciało efektu (przez
+    // requestAnimationFrame), żeby uniknąć kaskadowego re-renderu
+    // wywołanego bezpośrednio przy zmianie zależności efektu.
     const raf = requestAnimationFrame(() => {
       setForm((p) => ({ ...p, topic: prefill.topic, msg: prefill.message }));
       setJustPrefilled(true);
@@ -48,40 +52,16 @@ export function Contact() {
 
       const data = await res.json();
 
-      // BŁĄD WALIDACJI LUB SERWERA (np. błędny mail, błąd bazy)
       if (!res.ok) {
-        const errorMessage = data.error || "Nie udało się wysłać wiadomości.";
-        setErrorMsg(errorMessage);
+        setErrorMsg(data.error || "Nie udało się wysłać wiadomości.");
         setStatus("error");
-
-        // Śledzenie błędu w GA
-        trackCustomEvent("contact_form_error", {
-          error_type: "server_or_validation",
-          error_message: errorMessage,
-          topic: form.topic,
-        });
         return;
       }
 
-      // SUKCES
       setStatus("sent");
-      Clarity.event("contact_form_success"); // Event dla Clarity
-      trackCustomEvent("contact_form_success", { // Event dla GA
-        topic: form.topic,
-      });
-
     } catch {
-      // BŁĄD POŁĄCZENIA (np. użytkownik stracił zasięg/internet)
-      const networkError = "Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.";
-      setErrorMsg(networkError);
+      setErrorMsg("Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.");
       setStatus("error");
-
-      // Śledzenie błędu sieciowego w GA
-      trackCustomEvent("contact_form_error", {
-        error_type: "network_error",
-        error_message: networkError,
-        topic: form.topic,
-      });
     }
   };
 
