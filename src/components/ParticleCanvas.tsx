@@ -97,7 +97,9 @@ export function ParticleCanvas() {
 
       raf.current = requestAnimationFrame(draw);
     };
-    draw();
+    const initTimeout = setTimeout(() => {
+      draw();
+    }, 30);
 
     return () => {
       window.removeEventListener("resize", resize);

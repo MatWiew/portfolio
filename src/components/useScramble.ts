@@ -37,7 +37,7 @@ export function useScramble(text: string, delay = 0) {
           }
         }
         setDisplay(out);
-      }, 35); // Lekko przyspieszony interwał dla płynności
+      }, 40); // Lekko przyspieszony interwał dla płynności
     }, delay);
 
     return () => {

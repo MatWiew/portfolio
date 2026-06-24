@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDown, ChevronRight } from "lucide-react";
-import dynamic from "next/dynamic";
+import { ParticleCanvas } from "./ParticleCanvas";
 import { useScramble } from "./useScramble";
 import { GlitchText } from "./GlitchText";
 import { SKILLS } from "@/data/skills";
@@ -12,10 +12,6 @@ function scrollTo(id: string) {
 }
 
 export function Hero() {
-  const ParticleCanvas = dynamic(
-    () => import("./ParticleCanvas").then((mod) => mod.ParticleCanvas),
-    { ssr: false },
-  );
 
   const h1 = useScramble("MATEUSZ", 100);
   const h2 = useScramble("WIEWIÓRA", 400);
@@ -77,22 +73,52 @@ export function Hero() {
             fontFamily: "var(--font-display)",
             lineHeight: "1.02",
           }}
-          className="text-[clamp(3.1rem,11vw,9rem)] font-black tracking-tighter mb-6 select-none w-full min-h-[150px] sm:min-h-0"
+          className="text-[clamp(3.1rem,11vw,9rem)] font-black tracking-tighter mb-6 select-none w-full min-h-[150px] sm:min-h-0 text-center"
         >
-          <span className="block text-foreground min-h-[1.1em]">
-            {h1 === "MATEUSZ" ? (
-              <GlitchText text={h1} startDelay={200} />
-            ) : (
-              h1 || "\u00A0"
-            )}
+          {/* BLOK 1: MATEUSZ */}
+          <span className="relative block text-foreground min-h-[1.1em]">
+            {/* Niewidzialny szkielet — rezerwuje miejsce na ekranie i eliminuje CLS */}
+            <span
+              className="invisible select-none pointer-events-none"
+              aria-hidden="true"
+            >
+              MATEUSZ
+            </span>
+
+            {/* Warstwa absolutna — tu dzieje się cała magia animacji */}
+            <span className="absolute inset-0 block text-center">
+              {h1 === "MATEUSZ" ? (
+                <GlitchText text={h1} startDelay={200} />
+              ) : (
+                h1 || "\u00A0"
+              )}
+            </span>
           </span>
-          <span className="block min-h-[1.1em]" style={{ color: "#00d4ff" }}>
-            {h2 === "WIEWIÓRA" ? (
-              <GlitchText text={h2} startDelay={500} />
-            ) : (
-              h2 || "\u00A0"
-            )}
+
+          {/* BLOK 2: WIEWIÓRA */}
+          <span
+            className="relative block min-h-[1.1em]"
+            style={{ color: "#00d4ff" }}
+          >
+            {/* Niewidzialny szkielet — rezerwuje miejsce na ekranie i eliminuje CLS */}
+            <span
+              className="invisible select-none pointer-events-none"
+              aria-hidden="true"
+            >
+              WIEWIÓRA
+            </span>
+
+            {/* Warstwa absolutna — tu dzieje się cała magia animacji */}
+            <span className="absolute inset-0 block text-center">
+              {h2 === "WIEWIÓRA" ? (
+                <GlitchText text={h2} startDelay={500} />
+              ) : (
+                h2 || "\u00A0"
+              )}
+            </span>
           </span>
+
+          {/* BLOK 3: SUBTEXT */}
           <span
             className="block text-muted-foreground/50 font-light"
             style={{
