@@ -16,10 +16,13 @@ export function ParticleCanvas() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Funkcja pomiaru z fallbackiem do wymiarów okna (na wypadek opóźnienia CSS)
     const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      canvas.width = canvas.offsetWidth || window.innerWidth;
+      canvas.height = canvas.offsetHeight || window.innerHeight;
     };
+    
+    // Pierwszy, bezpieczny pomiar okna
     resize();
     window.addEventListener("resize", resize);
 
@@ -30,9 +33,11 @@ export function ParticleCanvas() {
     window.addEventListener("mousemove", onMove);
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    const N = prefersReducedMotion ? 0 : 80; // Lekko zmniejszamy max liczbę dla optymalizacji
+    const N = prefersReducedMotion ? 0 : 80;
+    
     type P = { x: number; y: number; vx: number; vy: number; r: number; a: number };
+    
+    // Punkty losują się z poprawnych wymiarów okna, a nie z zera
     const pts: P[] = Array.from({ length: N }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -51,9 +56,8 @@ export function ParticleCanvas() {
         p.vy += (Math.random() - 0.5) * 0.012;
         const dx = mx - p.x;
         const dy = my - p.y;
-        // Szybkie sprawdzenie kwadratu odległości zamiast natychmiastowego Math.sqrt
         const dSq = dx * dx + dy * dy;
-        if (dSq < 32400) { // 180 * 180
+        if (dSq < 32400) {
           const d = Math.sqrt(dSq);
           p.vx += (dx / d) * 0.018;
           p.vy += (dy / d) * 0.018;
@@ -74,7 +78,6 @@ export function ParticleCanvas() {
         ctx.fill();
       });
 
-      // LIMIT ODLEGŁOŚCI DO KWADRATU: 110 * 110 = 12100
       const maxDistSq = 12100;
 
       for (let i = 0; i < N; i++) {
@@ -83,8 +86,6 @@ export function ParticleCanvas() {
           const dy = pts[i].y - pts[j].y;
           const dSq = dx * dx + dy * dy;
 
-          // Kluczowa optymalizacja: Math.sqrt wykonujemy TYLKO, gdy punkty są blisko siebie.
-          // Oszczędza to tysiące ciężkich operacji matematycznych na sekundę!
           if (dSq < maxDistSq) {
             const d = Math.sqrt(dSq);
             ctx.beginPath();
@@ -99,11 +100,18 @@ export function ParticleCanvas() {
 
       raf.current = requestAnimationFrame(draw);
     };
-    draw();
+
+    // KLUCZOWY TRIK: Dajemy przeglądarce mikro-moment na ułożenie DOM i stylów.
+    // Wykonujemy ponowny, ostateczny pomiar kontenera tuż przed startem animacji.
+    const initTimeout = setTimeout(() => {
+      resize(); 
+      draw();
+    }, 16); // Około 1 klatka (16ms) opóźnienia wyeliminuje wyścig zasobów na produkcji
 
     return () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
+      clearTimeout(initTimeout);
       cancelAnimationFrame(raf.current);
     };
   }, []);
