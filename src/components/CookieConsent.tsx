@@ -4,12 +4,15 @@ import { useState, useId } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCookieConsent, type ConsentLevel } from "./useCookieConsent";
 
-/* ─────────────────────────────────────────────────────────────────────────
-   SVG ciasteczko (Zawsze w całości, z neonowym konturem zewnętrznym)
-   ───────────────────────────────────────────────────────────────────────── */
-const CRUMB_RADII = [1.9, 1.6, 2.1, 1.7, 2.3, 1.8, 2.0, 1.5];
+const FULL_PATH =
+  "M 47.1,11.7 C 58.4,8.7 70.5,9.7 81.1,14.7 C 91.8,19.7 100.3,28.2 105.3,38.9 C 110.3,49.5 111.3,61.6 108.3,72.9 C 102.0,96.4 79.8,111.9 55.6,109.8 C 31.5,107.7 12.3,88.5 10.2,64.4 C 8.1,40.2 23.6,18.0 47.1,11.7 Z";
+const BITTEN_PATH =
+  "M 47.1,11.7 C 43.0,25.3 47.7,34.2 61.2,38.4 C 59.5,53.7 66.3,60.5 81.6,58.8 C 85.8,72.3 94.7,77.0 108.3,72.9 C 102.0,96.4 79.8,111.9 55.6,109.8 C 31.5,107.7 12.3,88.5 10.2,64.4 C 8.1,40.2 23.6,18.0 47.1,11.7 Z";
 
-function CookieSvg({ crumbs }: { crumbs: boolean }) {
+/* ─────────────────────────────────────────────────────────────────────────
+   SVG ciasteczko z animacją nadgryzienia
+   ───────────────────────────────────────────────────────────────────────── */
+function CookieSvg({ bitten }: { bitten: boolean }) {
   const id = useId().replace(/:/g, "");
 
   // Kawałki czekolady (chips)
@@ -27,28 +30,19 @@ function CookieSvg({ crumbs }: { crumbs: boolean }) {
     { cx: 88, cy: 50, r: 4 },
   ];
 
-  // Pełna, idealna krawędź ciasteczka
-  const cookiePath =
-    "M60,8 C72,7 84,10 92,18 C102,28 113,38 112,52 C113,66 108,80 98,89 C86,100 72,113 58,112 C44,113 30,106 20,96 C10,86 7,72 8,58 C7,44 12,30 22,20 C32,10 48,9 60,8 Z";
-
-  // Pozycje startowe i wektory ruchu dla animowanych okruszków
-  const crumbPositions = [
-    { x: 15, y: 20, dx: -12, dy: -10 },
-    { x: 8, y: 35, dx: -15, dy: 5 },
-    { x: 30, y: 10, dx: -5, dy: -14 },
-    { x: 55, y: 5, dx: 3, dy: -16 },
-    { x: 100, y: 20, dx: 14, dy: -8 },
-    { x: 112, y: 45, dx: 16, dy: 2 },
-    { x: 40, y: 115, dx: -8, dy: 14 },
-    { x: 70, y: 118, dx: 2, dy: 16 },
-  ];
+  const currentPath = bitten ? BITTEN_PATH : FULL_PATH;
 
   return (
-    <svg
+    <motion.svg
       viewBox="0 0 120 120"
       width="140"
       height="140"
       className="drop-shadow-[0_0_24px_rgba(0,212,255,0.35)]"
+      animate={{
+        scale: bitten ? [1, 0.85, 1.05, 1] : 1,
+        rotate: bitten ? [0, -10, 5, 0] : 0,
+      }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
     >
       <defs>
         {/* Gradient tła ciasteczka */}
@@ -63,11 +57,16 @@ function CookieSvg({ crumbs }: { crumbs: boolean }) {
           <stop offset="0%" stopColor="rgba(0,212,255,0.18)" />
           <stop offset="100%" stopColor="rgba(0,212,255,0)" />
         </radialGradient>
+
+        {/* Maska clippingu — ukrywa chipy w nadgryzionym obszarze */}
+        <clipPath id={`clip-${id}`}>
+          <motion.path animate={{ d: currentPath }} transition={{ type: "spring", stiffness: 400, damping: 25 }} />
+        </clipPath>
       </defs>
 
       {/* Ciało ciasteczka */}
-      <g>
-        <path d={cookiePath} fill={`url(#cg-${id})`} />
+      <g clipPath={`url(#clip-${id})`}>
+        <motion.path animate={{ d: currentPath }} transition={{ type: "spring", stiffness: 400, damping: 25 }} fill={`url(#cg-${id})`} />
 
         {/* Grid texture */}
         <g opacity="0.07" stroke="rgba(0,212,255,1)" strokeWidth="0.6">
@@ -80,8 +79,9 @@ function CookieSvg({ crumbs }: { crumbs: boolean }) {
         </g>
 
         {/* Szyna konturowa wewnętrzna */}
-        <path
-          d={cookiePath}
+        <motion.path
+          animate={{ d: currentPath }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
           fill="none"
           stroke="rgba(0,212,255,0.25)"
           strokeWidth="1.5"
@@ -101,43 +101,26 @@ function CookieSvg({ crumbs }: { crumbs: boolean }) {
         ))}
 
         {/* Połysk cyfrowy */}
-        <path d={cookiePath} fill={`url(#shine-${id})`} />
+        <motion.path animate={{ d: currentPath }} transition={{ type: "spring", stiffness: 400, damping: 25 }} fill={`url(#shine-${id})`} />
       </g>
 
       {/* NEONOWY KONTUR ZEWNĘTRZNY */}
       <motion.path
-        d={cookiePath}
         fill="none"
         stroke="rgba(0,212,255,0.45)"
         strokeWidth="1.2"
         animate={{
+          d: currentPath,
           opacity: [0.45, 0.85, 0.45],
           strokeWidth: ["1.2px", "1.8px", "1.2px"],
         }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        transition={{
+          d: { type: "spring", stiffness: 400, damping: 25 },
+          opacity: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+          strokeWidth: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+        }}
       />
-
-      {/* Animowane okruszki */}
-      <AnimatePresence>
-        {crumbs && crumbPositions.map((c, i) => (
-          <motion.circle
-            key={`crumb${i}`}
-            cx={c.x}
-            cy={c.y}
-            r={CRUMB_RADII[i]}
-            fill="rgba(0,212,255,0.7)"
-            initial={{ opacity: 1, x: 0, y: 0 }}
-            animate={{
-              opacity: [1, 1, 0],
-              x: c.dx,
-              y: c.dy,
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, delay: i * 0.04, ease: "easeOut" }}
-          />
-        ))}
-      </AnimatePresence>
-    </svg>
+    </motion.svg>
   );
 }
 
@@ -147,22 +130,22 @@ function CookieSvg({ crumbs }: { crumbs: boolean }) {
 export function CookieConsent() {
   const { consent, visible, choose } = useCookieConsent();
 
-  const [crumbs, setCrumbs] = useState(false);
+  const [bitten, setBitten] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
 
   const handleChoose = (level: ConsentLevel) => {
     if (level === consent) return;
 
     if (level === "none") {
-      // Dla "Odrzuć" strzelamy okruszkami i zamykamy po chwili, by było widać efekt
-      setCrumbs(true);
+      setBitten(true);
       setTimeout(() => {
-        setCrumbs(false);
         setIsClosed(true);
-      }, 800);
+      }, 500);
     } else {
-      // Dla akceptacji zamykamy od razu
-      setIsClosed(true);
+      setBitten(false);
+      setTimeout(() => {
+        setIsClosed(true);
+      }, 500);
     }
 
     choose(level);
@@ -197,7 +180,7 @@ export function CookieConsent() {
               <div className="flex items-start gap-5">
                 <div className="flex-shrink-0 flex items-center justify-center w-[100px]">
                   <div style={{ width: 100, display: "flex", justifyContent: "center" }}>
-                    <CookieSvg crumbs={crumbs} />
+                    <CookieSvg bitten={bitten} />
                   </div>
                 </div>
 
@@ -222,39 +205,47 @@ export function CookieConsent() {
                   </p>
 
                   <div className="flex flex-col gap-2">
-                    {(
-                      [
-                        { level: "all", label: "Zaakceptuj ciasteczka", hot: true },
-                        { level: "essential", label: "Tylko niezbędne", hot: false },
-                        { level: "none", label: "Odrzuć", hot: false },
-                      ] as const
-                    ).map(({ level, label, hot }) => (
-                      <motion.button
-                        key={level}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() => handleChoose(level)}
-                        style={{ fontFamily: "var(--font-mono)" }}
-                        className={`relative w-full text-[12px] font-bold uppercase tracking-wider py-2.5 px-4 rounded-xl border transition-colors duration-200 text-left flex items-center justify-between ${
-                          hot
-                            ? "bg-primary text-black border-primary/80 hover:bg-primary/90"
-                            : level === "none"
-                            ? "bg-white/[0.03] text-muted-foreground border-white/[0.07] hover:border-white/15 hover:text-foreground/70"
-                            : "bg-white/[0.04] text-foreground/80 border-white/10 hover:border-primary/30 hover:text-primary"
-                        }`}
-                      >
-                        {label}
-                        {consent === level && (
-                          <motion.span
-                            layoutId="consent-check"
-                            className={`text-xs ${hot ? "text-black/60" : "text-primary/60"}`}
-                            transition={{ type: "spring", stiffness: 400 }}
-                          >
-                            ✓
-                          </motion.span>
-                        )}
-                      </motion.button>
-                    ))}
+                    {/* Zaakceptuj ciasteczka */}
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => handleChoose("all")}
+                      onMouseEnter={() => setBitten(false)}
+                      style={{ fontFamily: "var(--font-mono)" }}
+                      className="relative w-full text-[12px] font-bold uppercase tracking-wider py-2.5 px-4 rounded-xl border transition-colors duration-200 text-left flex items-center justify-between bg-primary text-black border-primary/80 hover:bg-primary/90"
+                    >
+                      Zaakceptuj ciasteczka
+                      {consent === "all" && (
+                        <motion.span
+                          layoutId="consent-check"
+                          className="text-xs text-black/60"
+                          transition={{ type: "spring", stiffness: 400 }}
+                        >
+                          ✓
+                        </motion.span>
+                      )}
+                    </motion.button>
+
+                    {/* Odrzuć */}
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => handleChoose("none")}
+                      onMouseEnter={() => setBitten(true)}
+                      style={{ fontFamily: "var(--font-mono)" }}
+                      className="relative w-full text-[12px] font-bold uppercase tracking-wider py-2.5 px-4 rounded-xl border transition-colors duration-200 text-left flex items-center justify-between bg-white/[0.03] text-muted-foreground border-white/[0.07] hover:border-white/15 hover:text-foreground/70"
+                    >
+                      Odrzuć
+                      {consent === "none" && (
+                        <motion.span
+                          layoutId="consent-check"
+                          className="text-xs text-primary/60"
+                          transition={{ type: "spring", stiffness: 400 }}
+                        >
+                          ✓
+                        </motion.span>
+                      )}
+                    </motion.button>
                   </div>
                 </div>
               </div>

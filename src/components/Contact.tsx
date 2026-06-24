@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle, AlertCircle, Mail, Phone } from "lucide-react";
 import { LinkedInIcon } from "./LinkedInIcon";
@@ -9,6 +9,7 @@ import { FloatField } from "./FloatField";
 import { TopicSelect, TOPICS } from "./TopicSelect";
 import { useContactPrefill } from "./ContactPrefillContext";
 import { SITE } from "@/data/site";
+import { trackFormInteraction } from "./Analytics";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -18,6 +19,7 @@ export function Contact() {
   const [errorMsg, setErrorMsg] = useState("");
   const { prefill } = useContactPrefill();
   const [justPrefilled, setJustPrefilled] = useState(false);
+  const formStartedRef = useRef(false);
 
   // Gdy ktoś kliknie "Zapytaj o [usługę]" w sekcji Oferta, kontekst dostaje
   // nową wartość (nonce się zmienia) — wtedy nadpisujemy temat i treść
@@ -38,10 +40,20 @@ export function Contact() {
     };
   }, [prefill]);
 
+  const handleFieldFocus = (field: string) => {
+    // Śledzenie pierwszego kontaktu z formularzem
+    if (!formStartedRef.current) {
+      formStartedRef.current = true;
+      trackFormInteraction("start", { first_field: field });
+    }
+    trackFormInteraction("field_focus", { field });
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
     setErrorMsg("");
+    trackFormInteraction("submit", { topic: form.topic });
 
     try {
       const res = await fetch("/api/contact", {
@@ -55,13 +67,16 @@ export function Contact() {
       if (!res.ok) {
         setErrorMsg(data.error || "Nie udało się wysłać wiadomości.");
         setStatus("error");
+        trackFormInteraction("error", { error: data.error || "unknown", topic: form.topic });
         return;
       }
 
       setStatus("sent");
+      trackFormInteraction("success", { topic: form.topic });
     } catch {
       setErrorMsg("Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.");
       setStatus("error");
+      trackFormInteraction("error", { error: "network_error", topic: form.topic });
     }
   };
 
@@ -123,6 +138,7 @@ export function Contact() {
                   required
                   value={form.name}
                   onChange={(v) => setForm((p) => ({ ...p, name: v }))}
+                  onFocus={() => handleFieldFocus("name")}
                 />
                 <FloatField
                   label="Adres e-mail"
@@ -131,6 +147,7 @@ export function Contact() {
                   required
                   value={form.email}
                   onChange={(v) => setForm((p) => ({ ...p, email: v }))}
+                  onFocus={() => handleFieldFocus("email")}
                 />
                 <TopicSelect
                   value={form.topic}
@@ -144,6 +161,7 @@ export function Contact() {
                   onChange={(v) => setForm((p) => ({ ...p, msg: v }))}
                   textarea
                   highlight={justPrefilled}
+                  onFocus={() => handleFieldFocus("msg")}
                 />
 
                 {status === "error" && (
@@ -208,6 +226,7 @@ export function Contact() {
                   onClick={() => {
                     setStatus("idle");
                     setForm({ name: "", email: "", topic: TOPICS[0], msg: "" });
+                    formStartedRef.current = false;
                   }}
                   style={{ fontFamily: "var(--font-mono)" }}
                   className="text-xs text-primary/50 hover:text-primary transition-colors uppercase tracking-widest mt-2"

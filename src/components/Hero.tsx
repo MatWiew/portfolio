@@ -6,6 +6,7 @@ import { ParticleCanvas } from "./ParticleCanvas";
 import { useScramble } from "./useScramble";
 import { GlitchText } from "./GlitchText";
 import { SKILLS } from "@/data/skills";
+import { trackCTAClick } from "./Analytics";
 
 function scrollTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -115,7 +116,10 @@ export function Hero() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => scrollTo("projects")}
+            onClick={() => {
+              trackCTAClick("hero", "projects");
+              scrollTo("projects");
+            }}
             className="group flex items-center gap-2 bg-primary text-black text-sm font-bold tracking-wider uppercase px-8 py-4 rounded-full hover:bg-primary/90 transition-colors"
             style={{ fontFamily: "var(--font-mono)" }}
           >
@@ -125,7 +129,10 @@ export function Hero() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => scrollTo("contact")}
+            onClick={() => {
+              trackCTAClick("hero", "contact");
+              scrollTo("contact");
+            }}
             className="text-sm uppercase tracking-wider text-muted-foreground border border-white/10 px-8 py-4 rounded-full hover:border-primary/40 hover:text-primary transition-colors"
             style={{ fontFamily: "var(--font-mono)" }}
           >

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { OFFER, type OfferItem } from "@/data/offer";
 import { useContactPrefill } from "./ContactPrefillContext";
+import { trackCardInteraction, trackCTAClick } from "./Analytics";
 
 const ICONS = {
   Sparkles,
@@ -27,8 +28,14 @@ export function Offer() {
   const { requestContact } = useContactPrefill();
 
   const handleAsk = (item: OfferItem) => {
+    trackCTAClick("offer", `Zapytaj o ${item.title}`, { id: item.id, title: item.title });
     requestContact(item.topic, item.prefillMessage);
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleToggle = (item: OfferItem, isOpen: boolean) => {
+    const action = isOpen ? "collapse" : "expand";
+    trackCardInteraction("offer", action, { id: item.id, title: item.title });
   };
 
   return (
@@ -72,7 +79,10 @@ export function Offer() {
               item={item}
               index={i}
               isOpen={openId === item.id}
-              onToggle={() => setOpenId((prev) => (prev === item.id ? null : item.id))}
+              onToggle={() => {
+                handleToggle(item, openId === item.id);
+                setOpenId((prev) => (prev === item.id ? null : item.id));
+              }}
               onAsk={() => handleAsk(item)}
             />
           ))}

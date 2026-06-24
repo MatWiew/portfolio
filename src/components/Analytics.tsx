@@ -67,9 +67,46 @@ export default function AnalyticsSync() {
   return null;
 }
 
-// Bezpieczna funkcja do śledzenia formularza kontaktowego
-export const trackCustomEvent = (eventName: string, payload?: object) => {
-  if (typeof window !== "undefined" && analyticsInstance) {
+/* ─────────────────────────────────────────────────────────────────────────
+   Funkcje do śledzenia zdarzeń — wywoływane z komponentów
+   ───────────────────────────────────────────────────────────────────────── */
+
+/** Ogólny event tracking (GA + Clarity) */
+export const trackCustomEvent = (eventName: string, payload?: Record<string, any>) => {
+  if (typeof window === "undefined") return;
+  if (analyticsInstance) {
     analyticsInstance.track(eventName, payload);
   }
+  // Clarity tagging — tagujemy sesję informacją o zdarzeniu
+  try {
+    Clarity.setTag(eventName, payload ? JSON.stringify(payload).slice(0, 255) : "true");
+  } catch {
+    // Clarity może nie być jeszcze gotowe
+  }
+};
+
+/** Śledzenie interakcji z formularzem kontaktowym */
+export const trackFormInteraction = (
+  action: "start" | "field_focus" | "submit" | "success" | "error",
+  details?: Record<string, any>
+) => {
+  trackCustomEvent(`contact_form_${action}`, details);
+};
+
+/** Śledzenie kliknięć CTA */
+export const trackCTAClick = (
+  section: string,
+  buttonLabel: string,
+  details?: Record<string, any>
+) => {
+  trackCustomEvent("cta_click", { section, button: buttonLabel, ...details });
+};
+
+/** Śledzenie interakcji z kartami (oferta, projekty) */
+export const trackCardInteraction = (
+  type: "offer" | "project",
+  action: "expand" | "collapse" | "link_click",
+  details?: Record<string, any>
+) => {
+  trackCustomEvent(`${type}_card_${action}`, details);
 };

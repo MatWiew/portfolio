@@ -25,19 +25,29 @@ const siteUrl = "https://mateuszwiewiora.pl";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Mateusz Wiewióra — Full-Stack MERN Developer",
+  title: {
+    default: "Mateusz Wiewióra — Full-Stack MERN Developer",
+    template: "%s | Mateusz Wiewióra",
+  },
   description:
-    "Tworzę skalowalne aplikacje webowe od koncepcji po wdrożenie. React, Node.js, Express i MongoDB z naciskiem na wydajność i doświadczenie użytkownika.",
+    "Tworzę skalowalne aplikacje webowe od koncepcji po wdrożenie. Programista React, Node.js, Express i MongoDB. Zapraszam do współpracy.",
   keywords: [
     "Mateusz Wiewióra",
     "Full-Stack Developer",
     "MERN Developer",
-    "React",
-    "Node.js",
+    "React Developer",
+    "Node.js Developer",
     "Programista stron internetowych",
     "Tworzenie aplikacji webowych",
+    "Aplikacje internetowe na zamówienie",
+    "Programista Warszawa",
+    "Freelancer IT",
   ],
   authors: [{ name: "Mateusz Wiewióra", url: siteUrl }],
+  creator: "Mateusz Wiewióra",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Mateusz Wiewióra — Full-Stack MERN Developer",
     description:
@@ -46,14 +56,32 @@ export const metadata: Metadata = {
     siteName: "Mateusz Wiewióra — Portfolio",
     locale: "pl_PL",
     type: "website",
+    images: [
+      {
+        url: "/og-image.jpg", // Placeholder - dodaj og-image.jpg do /public
+        width: 1200,
+        height: 630,
+        alt: "Mateusz Wiewióra - Full-Stack Developer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Mateusz Wiewióra — Full-Stack MERN Developer",
-    description:
-      "Tworzę skalowalne aplikacje webowe od koncepcji po wdrożenie.",
+    description: "Tworzę skalowalne aplikacje webowe od koncepcji po wdrożenie.",
+    creator: "@mateuszwiewiora",
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

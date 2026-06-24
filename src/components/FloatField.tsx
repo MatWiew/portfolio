@@ -8,6 +8,7 @@ export function FloatField({
   type = "text",
   value,
   onChange,
+  onFocus: onFocusExternal,
   textarea,
   name,
   required,
@@ -18,6 +19,7 @@ export function FloatField({
   type?: string;
   value: string;
   onChange: (v: string) => void;
+  onFocus?: () => void;
   textarea?: boolean;
   name: string;
   required?: boolean;
@@ -27,6 +29,10 @@ export function FloatField({
   highlight?: boolean;
 }) {
   const [focused, setFocused] = useState(false);
+  const handleFocus = () => {
+    setFocused(true);
+    onFocusExternal?.();
+  };
   const floated = focused || value.length > 0;
   const baseClass =
     "w-full bg-white/[0.03] border rounded-xl px-4 pt-7 pb-3 text-foreground outline-none transition-colors focus:border-primary/50 font-sans text-sm " +
@@ -49,7 +55,7 @@ export function FloatField({
           value={value}
           required={required}
           onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setFocused(true)}
+          onFocus={handleFocus}
           onBlur={() => setFocused(false)}
           className={baseClass + " resize-none"}
           aria-label={label}
@@ -62,7 +68,7 @@ export function FloatField({
           value={value}
           required={required}
           onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setFocused(true)}
+          onFocus={handleFocus}
           onBlur={() => setFocused(false)}
           className={baseClass}
           aria-label={label}

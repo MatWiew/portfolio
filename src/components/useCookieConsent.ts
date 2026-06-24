@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Clarity from "@microsoft/clarity";
 
-export type ConsentLevel = "all" | "essential" | "none";
+export type ConsentLevel = "all" | "none";
 
 const KEY = "mw_cookie_consent";
 
@@ -12,10 +12,16 @@ export function useCookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem(KEY) as ConsentLevel | null;
+    const raw = localStorage.getItem(KEY);
+    // Backward compat: "essential" traktujemy jak "none"
+    const saved: ConsentLevel | null =
+      raw === "all" ? "all" : raw === "none" || raw === "essential" ? "none" : null;
+
     const raf = requestAnimationFrame(() => {
       if (saved) {
         setConsent(saved);
+        // Jeśli ktoś miał "essential", nadpisujemy na "none"
+        if (raw === "essential") localStorage.setItem(KEY, "none");
         applyConsent(saved);
       } else {
         setTimeout(() => setVisible(true), 1200);
@@ -31,7 +37,7 @@ export function useCookieConsent() {
     window.dispatchEvent(new Event("cookie-consent-changed"));
     if (level !== "all") {
       // Chowamy baner z opóźnieniem (dajemy czas na animację zjedzenia)
-      setTimeout(() => setVisible(false), level === "none" ? 1800 : 900);
+      setTimeout(() => setVisible(false), 1800);
     } else {
       setTimeout(() => setVisible(false), 600);
     }
@@ -45,9 +51,6 @@ function applyConsent(level: ConsentLevel) {
 
   // 1. Obsługa Google Analytics / gtag
   (window as any).dataLayer = (window as any).dataLayer || [];
-  const gtag = (window as any).gtag || ((...args: any[]) => { 
-      (window as any).dataLayer.push(args); 
-    });
 
   // 2. Obsługa Microsoft Clarity przez API v2
   try {

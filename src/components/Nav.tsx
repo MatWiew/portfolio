@@ -38,7 +38,11 @@ export function Nav() {
   }, []);
 
   return (
-    <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 backdrop-blur-xl border-b border-white/[0.05]">
+    <nav 
+      role="navigation" 
+      aria-label="Główna nawigacja"
+      className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 backdrop-blur-xl border-b border-white/[0.05]"
+    >
       <motion.span
         whileHover="hover"
         style={{ fontFamily: "var(--font-mono)" }}

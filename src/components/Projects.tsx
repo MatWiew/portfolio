@@ -7,6 +7,7 @@ import { GitHubIcon } from "./GitHubIcon";
 import { MagneticBtn } from "./MagneticBtn";
 import { TiltCard } from "./TiltCard";
 import { PROJECTS } from "@/data/projects";
+import { trackCardInteraction } from "./Analytics";
 
 export function Projects() {
   // Na urządzeniach dotykowych nie ma stanu hover, więc kliknięcie w kartę
@@ -52,7 +53,10 @@ export function Projects() {
               className={p.span ?? ""}
             >
             <TiltCard
-              onClick={() => setExpandedId(isOpen ? null : p.id)}
+              onClick={() => {
+                trackCardInteraction("project", isOpen ? "collapse" : "expand", { id: p.id, title: p.title });
+                setExpandedId(isOpen ? null : p.id);
+              }}
               className="group relative overflow-hidden rounded-2xl border border-white/[0.07] cursor-pointer"
               style={{ minHeight: p.tall ? 340 : 240 }}
             >
@@ -95,7 +99,10 @@ export function Projects() {
                       href={p.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        trackCardInteraction("project", "link_click", { id: p.id, title: p.title, type: "github" });
+                      }}
                       className="flex items-center gap-1.5 text-xs bg-white/10 hover:bg-white/20 border border-white/20 rounded-full px-4 py-2 text-white transition-colors"
                     >
                       <GitHubIcon className="w-3.5 h-3.5" />
@@ -107,7 +114,10 @@ export function Projects() {
                       href={p.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        trackCardInteraction("project", "link_click", { id: p.id, title: p.title, type: "live" });
+                      }}
                       className="flex items-center gap-1.5 text-xs bg-primary hover:bg-primary/90 rounded-full px-4 py-2 text-black font-bold transition-colors"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
