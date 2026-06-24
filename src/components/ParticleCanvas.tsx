@@ -2,17 +2,15 @@
 
 import { useEffect, useRef } from "react";
 
-/**
- * Tło hero — siatka cząsteczek łącząca się liniami, reagująca na ruch
- * myszy (cząsteczki delikatnie "uciekają" w stronę kursora). Czysty
- * canvas 2D, brak zależności — lekki i wydajny nawet na słabszych GPU.
- */
 export function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: -9999, y: -9999 });
   const raf = useRef<number>(0);
 
   useEffect(() => {
+    // RATUNEK DLA MOBILE: Jeśli to smartfon, całkowicie odcinamy uruchomienie skryptu.
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -31,11 +29,9 @@ export function ParticleCanvas() {
     };
     window.addEventListener("mousemove", onMove);
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const N = prefersReducedMotion ? 0 : 90;
+    const N = prefersReducedMotion ? 0 : 80; // Lekko zmniejszamy max liczbę dla optymalizacji
     type P = { x: number; y: number; vx: number; vy: number; r: number; a: number };
     const pts: P[] = Array.from({ length: N }, () => ({
       x: Math.random() * canvas.width,
@@ -53,8 +49,10 @@ export function ParticleCanvas() {
       pts.forEach((p) => {
         const dx = mx - p.x;
         const dy = my - p.y;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < 180) {
+        // Szybkie sprawdzenie kwadratu odległości zamiast natychmiastowego Math.sqrt
+        const dSq = dx * dx + dy * dy;
+        if (dSq < 32400) { // 180 * 180
+          const d = Math.sqrt(dSq);
           p.vx += (dx / d) * 0.018;
           p.vy += (dy / d) * 0.018;
         }
@@ -74,12 +72,19 @@ export function ParticleCanvas() {
         ctx.fill();
       });
 
+      // LIMIT ODLEGŁOŚCI DO KWADRATU: 110 * 110 = 12100
+      const maxDistSq = 12100;
+
       for (let i = 0; i < N; i++) {
         for (let j = i + 1; j < N; j++) {
           const dx = pts[i].x - pts[j].x;
           const dy = pts[i].y - pts[j].y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 110) {
+          const dSq = dx * dx + dy * dy;
+
+          // Kluczowa optymalizacja: Math.sqrt wykonujemy TYLKO, gdy punkty są blisko siebie.
+          // Oszczędza to tysiące ciężkich operacji matematycznych na sekundę!
+          if (dSq < maxDistSq) {
+            const d = Math.sqrt(dSq);
             ctx.beginPath();
             ctx.moveTo(pts[i].x, pts[i].y);
             ctx.lineTo(pts[j].x, pts[j].y);

@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 
-/**
- * Opakowuje już-wyrenderowany (statyczny) tekst i co jakiś czas wywołuje
- * krótki, cyfrowy "glitch": chromatic aberration (RGB split) + losowe
- * przesunięcie klipu warstw. Aktywuje się dopiero po `startDelay` (czyli
- * gdy efekt scramble w Hero zdążył się już zakończyć), żeby nie nakładać
- * dwóch animacji tekstu na siebie.
- */
 export function GlitchText({
   text,
   startDelay = 0,
@@ -24,20 +16,16 @@ export function GlitchText({
   const [glitching, setGlitching] = useState(false);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
     let cycleTimeout: ReturnType<typeof setTimeout>;
 
     const scheduleNext = () => {
-      // Glitch powtarza się w losowych, nieregularnych odstępach (3.5–7.5s),
-      // żeby nie wyglądało to jak miarowy, mechaniczny tik.
-      const delay = 3500 + Math.random() * 4000;
+      const delay = 4000 + Math.random() * 4000;
       cycleTimeout = setTimeout(() => {
         setGlitching(true);
-        setTimeout(() => setGlitching(false), 220);
+        setTimeout(() => setGlitching(false), 250);
         scheduleNext();
       }, delay);
     };
@@ -52,51 +40,43 @@ export function GlitchText({
 
   return (
     <span className={`relative inline-block ${className ?? ""}`} style={{ color }}>
-      {/* warstwa bazowa — zawsze widoczna, niesie realny tekst (SEO/a11y) */}
+      <style>{`
+        @keyframes glitch-anim-1 {
+          0% { clip-path: inset(10% 0 70% 0); transform: translate(-3px, 0); opacity: 0.85; }
+          25% { clip-path: inset(60% 0 5% 0); transform: translate(2px, 0); }
+          50% { clip-path: inset(30% 0 45% 0); transform: translate(-2px, 0); opacity: 0.7; }
+          75% { clip-path: inset(0% 0 85% 0); transform: translate(1px, 0); }
+          100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); opacity: 0; }
+        }
+        @keyframes glitch-anim-2 {
+          0% { clip-path: inset(55% 0 20% 0); transform: translate(3px, 0); opacity: 0.85; }
+          25% { clip-path: inset(5% 0 75% 0); transform: translate(-2px, 0); }
+          50% { clip-path: inset(40% 0 35% 0); transform: translate(2px, 0); opacity: 0.7; }
+          75% { clip-path: inset(80% 0 0% 0); transform: translate(-1px, 0); }
+          100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); opacity: 0; }
+        }
+        .animate-glitch-1 { animation: glitch-anim-1 0.25s linear infinite; }
+        .animate-glitch-2 { animation: glitch-anim-2 0.25s linear infinite; }
+      `}</style>
+
       <span>{text}</span>
 
       {glitching && (
         <>
-          <motion.span
+          <span
             aria-hidden="true"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0, 0.85, 0, 0.7, 0],
-              x: [0, -3, 2, -2, 0],
-              clipPath: [
-                "inset(10% 0 70% 0)",
-                "inset(60% 0 5% 0)",
-                "inset(30% 0 45% 0)",
-                "inset(0% 0 85% 0)",
-                "inset(0 0 0 0)",
-              ],
-            }}
-            transition={{ duration: 0.22, times: [0, 0.25, 0.5, 0.75, 1] }}
-            className="absolute inset-0 pointer-events-none select-none"
+            className="absolute inset-0 pointer-events-none select-none animate-glitch-1"
             style={{ color: "#ff2d6f", mixBlendMode: "screen" }}
           >
             {text}
-          </motion.span>
-          <motion.span
+          </span>
+          <span
             aria-hidden="true"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0, 0.85, 0, 0.7, 0],
-              x: [0, 3, -2, 2, 0],
-              clipPath: [
-                "inset(55% 0 20% 0)",
-                "inset(5% 0 75% 0)",
-                "inset(40% 0 35% 0)",
-                "inset(80% 0 0% 0)",
-                "inset(0 0 0 0)",
-              ],
-            }}
-            transition={{ duration: 0.22, times: [0, 0.25, 0.5, 0.75, 1] }}
-            className="absolute inset-0 pointer-events-none select-none"
+            className="absolute inset-0 pointer-events-none select-none animate-glitch-2"
             style={{ color: "#00f0ff", mixBlendMode: "screen" }}
           >
             {text}
-          </motion.span>
+          </span>
         </>
       )}
     </span>

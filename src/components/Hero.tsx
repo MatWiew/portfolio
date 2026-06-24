@@ -1,8 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowDown, ChevronRight } from "lucide-react";
-import { ParticleCanvas } from "./ParticleCanvas";
+import dynamic from "next/dynamic";
 import { useScramble } from "./useScramble";
 import { GlitchText } from "./GlitchText";
 import { SKILLS } from "@/data/skills";
@@ -13,7 +12,11 @@ function scrollTo(id: string) {
 }
 
 export function Hero() {
-  // Ultra-szybkie, stałe opóźnienia dla efektu scramble, aby tekst pojawiał się natychmiast (drastyczny spadek LCP)
+  const ParticleCanvas = dynamic(
+    () => import("./ParticleCanvas").then((mod) => mod.ParticleCanvas),
+    { ssr: false },
+  );
+
   const h1 = useScramble("MATEUSZ", 100);
   const h2 = useScramble("WIEWIÓRA", 400);
   const h3 = useScramble("Full-Stack MERN Developer", 800);
@@ -70,9 +73,9 @@ export function Hero() {
 
         {/* Utrzymujemy poprawkę, która uratowała wskaźnik CLS */}
         <h1
-          style={{ 
-            fontFamily: "var(--font-display)", 
-            lineHeight: "1.02" 
+          style={{
+            fontFamily: "var(--font-display)",
+            lineHeight: "1.02",
           }}
           className="text-[clamp(3.1rem,11vw,9rem)] font-black tracking-tighter mb-6 select-none w-full min-h-[150px] sm:min-h-0"
         >
@@ -104,8 +107,9 @@ export function Hero() {
         </h1>
 
         <p className="text-muted-foreground max-w-lg mx-auto mb-10 text-base leading-relaxed">
-          Tworzę skalowalne aplikacje webowe — od koncepcji po wdrożenie. React, Node.js, Express
-          &amp; MongoDB z naciskiem na wydajność i doświadczenie użytkownika.
+          Tworzę skalowalne aplikacje webowe — od koncepcji po wdrożenie. React,
+          Node.js, Express &amp; MongoDB z naciskiem na wydajność i
+          doświadczenie użytkownika.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
@@ -146,7 +150,9 @@ export function Hero() {
             >
               {s.label}
             </p>
-            <p className="text-[13px] text-foreground/70 leading-relaxed">{s.items}</p>
+            <p className="text-[13px] text-foreground/70 leading-relaxed">
+              {s.items}
+            </p>
           </div>
         ))}
       </div>
