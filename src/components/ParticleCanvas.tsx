@@ -47,6 +47,8 @@ export function ParticleCanvas() {
       const { x: mx, y: my } = mouse.current;
 
       pts.forEach((p) => {
+        p.vx += (Math.random() - 0.5) * 0.012;
+        p.vy += (Math.random() - 0.5) * 0.012;
         const dx = mx - p.x;
         const dy = my - p.y;
         // Szybkie sprawdzenie kwadratu odległości zamiast natychmiastowego Math.sqrt
@@ -97,9 +99,7 @@ export function ParticleCanvas() {
 
       raf.current = requestAnimationFrame(draw);
     };
-    const initTimeout = setTimeout(() => {
-      draw();
-    }, 30);
+    draw();
 
     return () => {
       window.removeEventListener("resize", resize);
