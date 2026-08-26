@@ -27,8 +27,8 @@ export const PROJECTS: Project[] = [
   {
     id: 1,
     title: "Klub Szachowy C4",
-    desc: "Strona klubu szachowego zaprojektowana pod młodego, energicznego odbiorcę — wyrazista identyfikacja wizualna, szybki SPA frontend i prosta nawigacja po sekcjach klubu.",
-    tech: ["React", "SPA", "UI/UX", "Branding"],
+    desc: "Kompleksowa platforma dla klubu szachowego oparta o autorski motyw. Zaprojektowałem nowoczesny UI ze zmianą trybu wyświetlania oraz stworzyłem dedykowane bloki Gutenberga w PHP, ułatwiające zarządzanie aktualnościami, turniejami, profilami zawodników i zapisami online.",
+    tech: ["WordPress", "PHP", "Gutenberg", "UI/UX", "SCSS"],
     link: "https://klubc4.pl",
     span: "md:col-span-2",
     tall: true,
